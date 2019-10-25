@@ -30,7 +30,7 @@ class SearchWords:
 
     def __init__(self, json_data):
         self.Department = json_data.get('Department')
-        self.SearchTerm = self.is_none(json_data.get('Search Term'))
+        self.SearchTerm = json_data.get('Search Term')
         self.SearchFrequencyRank = json_data.get('Search Frequency Rank')
         self.Asin1 = json_data.get('#1 Clicked ASIN')
         self.ProductTitle1 = json_data.get('#1 Product Title')
@@ -52,11 +52,6 @@ class SearchWords:
             return float(value)
         else:
             return value
-
-    def is_none(self, json_d):
-        value = json_d.get('Search Term')
-        if not value:
-            print(json_d)
 
 
 Base = declarative_base(cls=SearchWords)
