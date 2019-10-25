@@ -46,11 +46,12 @@ class SearchWords:
         self.ConversionShare3 = json_data.get('#3 Conversion Share')
 
     def convert_to_float(self, value):
-        try:
-            if not isinstance(value, float) and not isinstance(value, str):
-                return float(value)
-        except Exception as e:
-            print(e)
+        if not isinstance(value, float):
+            return float(value)
+        elif isinstance(value, str):
+            return 0.0
+        else:
+            return value
 
 
 
