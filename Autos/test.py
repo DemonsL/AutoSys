@@ -1,8 +1,28 @@
 # coding: utf-8
+import os, sys, shutil
+sys.path.append('../')
 import json
+import logging
+import datetime
 import pandas as pd
 from Models import bussiness
 from Models import search_words
+
+
+formatter = logging.Formatter("%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s")
+file_name = '/home/develop/logs/adrp_logs/{}.log'.format(datetime.date.today())
+log = logging.getLogger()
+log.setLevel(logging.INFO)
+
+fh = logging.FileHandler(file_name, mode='a+')
+fh.setLevel(logging.DEBUG)
+fh.setFormatter(formatter)
+log.addHandler(fh)
+
+ch = logging.StreamHandler()
+ch.setLevel(logging.INFO)
+ch.setFormatter(formatter)
+log.addHandler(ch)
 
 
 class ExcelToSql:
@@ -32,18 +52,30 @@ class ExcelToSql:
         if f_format == 'xlsx':
             # d_keys = pd.read_excel(file_name, encoding='utf-8').keys()
             data = pd.read_excel(file_name, encoding='utf-8')
-        json_data = data[:3].to_json(orient='records')
+        json_data = data.to_json(orient='records')
         return json.loads(json_data)
 
 
 if __name__ == '__main__':
 
     tb_name = 'AscSearchWeek'
-    csv_file_name = '/home/data/keyword/parse/week/201810Amazon Search Terms_US.xlsx'
-    print(tb_name, csv_file_name)
+    file_path = '/home/data/keyword/parse/week/'
+    dst_path = '/home/data/keyword/achieve/week/'
     # file_date = csv_file_name.split('/')[-1].split('_')[1]
     # file_mkp = csv_file_name.split('/')[-1].split('_')[2].split('.')[0]
 
-    ets = ExcelToSql()
-    resp_data = ets.data_to_json(csv_file_name)
-    ets.add_to_sql(tb_name, resp_data)
+
+    files = os.listdir(file_path)
+    if files:
+        for f in files:
+            f_name = file_path + f
+            ets = ExcelToSql()
+            resp_data = ets.data_to_json(f_name)
+            try:
+                ets.add_to_sql(tb_name, resp_data)
+                log.info('Add %s to sql success, moving file...' % f_name)
+                shutil.move(f_name, dst_path + f)
+            except Exception as e:
+                log.error('Add to sql error: %s' % e)
+    else:
+        log.info('Now is no files.')

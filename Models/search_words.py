@@ -36,25 +36,15 @@ class SearchWords:
         self.ProductTitle1 = json_data.get('#1 Product Title')
         self.ClickShare1 = json_data.get('#1 Click Share')
         self.ConversionShare1 = json_data.get('#1 Conversion Share')
-        # self.ClickShare1 = self.percentage_to_float(json_data.get('#1 Click Share'))
-        # self.ConversionShare1 = self.percentage_to_float(json_data.get('#1 Conversion Share'))
         self.Asin2 = json_data.get('#2 Clicked ASIN')
         self.ProductTitle2 = json_data.get('#2 Product Title')
         self.ClickShare2 = json_data.get('#2 Click Share')
         self.ConversionShare2 = json_data.get('#2 Conversion Share')
-        # self.ClickShare2 = self.percentage_to_float(json_data.get('#2 Click Share'))
-        # self.ConversionShare2 = self.percentage_to_float(json_data.get('#2 Conversion Share'))
         self.Asin3 = json_data.get('#3 Clicked ASIN')
         self.ProductTitle3 = json_data.get('#3 Product Title')
         self.ClickShare3 = json_data.get('#3 Click Share')
         self.ConversionShare3 = json_data.get('#3 Conversion Share')
-        # self.ClickShare3 = self.percentage_to_float(json_data.get('#3 Click Share'))
-        # self.ConversionShare3 = self.percentage_to_float(json_data.get('#3 Conversion Share'))
 
-    def percentage_to_float(self, per_value):
-        if per_value:
-            f_value = float(per_value.strip('%')) / 100
-            return f_value
 
 
 Base = declarative_base(cls=SearchWords)
