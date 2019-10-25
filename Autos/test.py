@@ -10,7 +10,7 @@ from Models import search_words
 
 
 formatter = logging.Formatter("%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s")
-file_name = '/home/develop/logs/adrp_logs/{}.log'.format(datetime.date.today())
+file_name = '/home/develop/logs/excel_to_sql/{}.log'.format(datetime.date.today())
 log = logging.getLogger()
 log.setLevel(logging.INFO)
 
