@@ -64,7 +64,6 @@ if __name__ == '__main__':
     # file_date = csv_file_name.split('/')[-1].split('_')[1]
     # file_mkp = csv_file_name.split('/')[-1].split('_')[2].split('.')[0]
 
-
     files = os.listdir(file_path)
     if files:
         log.info('Starting add file to sql... | FileCount: %s' % len(files))
