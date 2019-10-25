@@ -34,16 +34,20 @@ class SearchWords:
         self.SearchFrequencyRank = json_data.get('Search Frequency Rank')
         self.Asin1 = json_data.get('#1 Clicked ASIN')
         self.ProductTitle1 = json_data.get('#1 Product Title')
-        self.ClickShare1 = json_data.get('#1 Click Share')
-        self.ConversionShare1 = json_data.get('#1 Conversion Share')
+        self.ClickShare1 = self.convert_to_float(json_data.get('#1 Click Share'))
+        self.ConversionShare1 = self.convert_to_float(json_data.get('#1 Conversion Share'))
         self.Asin2 = json_data.get('#2 Clicked ASIN')
         self.ProductTitle2 = json_data.get('#2 Product Title')
-        self.ClickShare2 = json_data.get('#2 Click Share')
-        self.ConversionShare2 = json_data.get('#2 Conversion Share')
+        self.ClickShare2 = self.convert_to_float(json_data.get('#2 Click Share'))
+        self.ConversionShare2 = self.convert_to_float(json_data.get('#2 Conversion Share'))
         self.Asin3 = json_data.get('#3 Clicked ASIN')
         self.ProductTitle3 = json_data.get('#3 Product Title')
-        self.ClickShare3 = json_data.get('#3 Click Share')
-        self.ConversionShare3 = json_data.get('#3 Conversion Share')
+        self.ClickShare3 = self.convert_to_float(json_data.get('#3 Click Share'))
+        self.ConversionShare3 = self.convert_to_float(json_data.get('#3 Conversion Share'))
+
+    def convert_to_float(self, value):
+        if not isinstance(value, float):
+            return float(value)
 
 
 
