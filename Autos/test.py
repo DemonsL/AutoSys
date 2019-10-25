@@ -67,6 +67,7 @@ if __name__ == '__main__':
 
     files = os.listdir(file_path)
     if files:
+        log.info('Starting add file to sql... | FileCount: %s' % len(files))
         for f in files:
             f_name = file_path + f
             ets = ExcelToSql()
@@ -77,5 +78,6 @@ if __name__ == '__main__':
                 shutil.move(f_name, dst_path + f)
             except Exception as e:
                 log.error('Add to sql error: %s' % e)
+        log.info('Add file to sql success!')
     else:
         log.info('Now is no files.')
