@@ -28,7 +28,7 @@ class SearchWords:
     ClickShare3 = Column(DECIMAL(8, 6))
     ConversionShare3 = Column(DECIMAL(8, 6))
 
-    def __init__(self, json_data):
+    def __init__(self, snap_date, json_data):
         self.Department = json_data.get('Department')
         self.SearchTerm = self.is_na(json_data.get('Search Term'))
         self.SearchFrequencyRank = json_data.get('Search Frequency Rank')
@@ -67,9 +67,9 @@ class AscSearchWeek(Base):
 
     Week = Column(Integer, primary_key=True)
 
-    def __init__(self, json_data):
-        SearchWords.__init__(self, json_data)
-        self.Week = json_data.get('\u5e74\u5468')
+    def __init__(self, snap_date, json_data):
+        SearchWords.__init__(self, snap_date, json_data)
+        self.Week = snap_date
 
 
 class AscSearchMonth(Base):
@@ -78,8 +78,8 @@ class AscSearchMonth(Base):
 
     Month = Column(Integer, primary_key=True)
 
-    def __init__(self, json_data):
-        SearchWords.__init__(self, json_data)
-        self.Month = json_data.get('Month')
+    def __init__(self, snap_date, json_data):
+        SearchWords.__init__(self, snap_date, json_data)
+        self.Month = snap_date
 
 

@@ -41,34 +41,38 @@ class FileToSql:
             tb_excute = 'search_words.{}'.format(tb_name)
             s_session = search_words.DBSession()
             for data in json_data:
-                data_to_sql = eval(tb_excute)(data)
+                data_to_sql = eval(tb_excute)(snap_date, data)
                 s_session.add(data_to_sql)
             s_session.commit()
 
     def data_to_json(self, file_name):
         f_format = file_name.split('.')[1]
         data = ''
+        data_time = ''
         if f_format == 'csv':
             data = pd.read_csv(file_name, encoding='utf-8')
         if f_format == 'xlsx':
             d_keys = pd.read_excel(file_name, encoding='utf-8').keys()
+            data_time = d_keys[4].split('-')[1].strip(']').strip()
             data = pd.read_excel(file_name, header=1, encoding='utf-8')
         json_data = json.loads(data.to_json(orient='records'))
-        return json_data
+        return json_data, data_time
 
 
 def start_add_files(f_name, s_path, d_path, tb_name):
     ets = FileToSql()
     f_path = s_path + f_name
-    resp_data = ets.data_to_json(f_path)
+    resp_data, resp_time = ets.data_to_json(f_path)
     if tb_name == 'AscAsinBussiness':
         f_date = f_name.split('_')[0]
         f_country = f_name.split('_')[1].split('.')[0]
         ets.add_to_sql(tb_name, resp_data, snap_date=f_date, country=f_country)
+        shutil.move(f_path, d_path)
     if tb_name in ['AscSearchWeek', 'AscSearchMonth']:
-        ets.add_to_sql(tb_name, resp_data)
+        data_week = datetime.datetime.strptime(resp_time, '%m/%d/%y').strftime('%V')
+        ets.add_to_sql(tb_name, resp_data, snap_date=data_week)
+        os.renames(f_path, d_path + str(datetime.datetime.now().year) + data_week + '.xlsx')
     log.info('Add %s to sql success, moving file bak...' % f)
-    shutil.move(f_path, d_path)
 
 
 if __name__ == '__main__':
