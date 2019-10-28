@@ -39,12 +39,9 @@ class ExcelToSql:
         if tb_name in ['AscSearchWeek', 'AscSearchMonth']:
             tb_excute = 'search_words.{}'.format(tb_name)
             s_session = search_words.DBSession()
-            ks = []
             for data in json_data:
-                ks.append(data.get('Search Term'))
                 data_to_sql = eval(tb_excute)(data)
                 s_session.add(data_to_sql)
-            log.info(ks)
             s_session.commit()
 
     def data_to_json(self, file_name):

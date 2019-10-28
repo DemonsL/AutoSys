@@ -30,7 +30,7 @@ class SearchWords:
 
     def __init__(self, json_data):
         self.Department = json_data.get('Department')
-        self.SearchTerm = json_data.get('Search Term')
+        self.SearchTerm = self.is_na(json_data.get('Search Term'))
         self.SearchFrequencyRank = json_data.get('Search Frequency Rank')
         self.Asin1 = json_data.get('#1 Clicked ASIN')
         self.ProductTitle1 = json_data.get('#1 Product Title')
@@ -50,6 +50,12 @@ class SearchWords:
             return 0.0
         if not isinstance(value, float):
             return float(value)
+        else:
+            return value
+
+    def is_na(self, value):
+        if not value:
+            return 'n/a'
         else:
             return value
 
