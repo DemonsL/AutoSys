@@ -51,10 +51,10 @@ class FileToSql:
         if f_format == 'csv':
             data = pd.read_csv(file_name, encoding='utf-8')
         if f_format == 'xlsx':
-            # d_keys = pd.read_excel(file_name, encoding='utf-8').keys()
-            data = pd.read_excel(file_name, encoding='utf-8')
-        json_data = data.to_json(orient='records')
-        return json.loads(json_data)
+            d_keys = pd.read_excel(file_name, encoding='utf-8').keys()
+            data = pd.read_excel(file_name, header=1, encoding='utf-8')
+        json_data = json.loads(data.to_json(orient='records'))
+        return json_data
 
 
 def start_add_files(f_name, s_path, d_path, tb_name):
