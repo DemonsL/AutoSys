@@ -5,6 +5,7 @@ import json
 import logging
 import datetime
 import pandas as pd
+from Config import api_config
 from Models import bussiness
 from Models import search_words
 
@@ -25,7 +26,7 @@ ch.setFormatter(formatter)
 log.addHandler(ch)
 
 
-class ExcelToSql:
+class FileToSql:
 
     def add_to_sql(self, tb_name, json_data, snap_date=None, country=None):
         if tb_name == 'AscAsinBussiness':
@@ -56,27 +57,35 @@ class ExcelToSql:
         return json.loads(json_data)
 
 
+def start_add_files(f_name, s_path, d_path, tb_name):
+    ets = FileToSql()
+    f_path = s_path + f_name
+    resp_data = ets.data_to_json(f_path)
+    if tb_name == 'AscAsinBussiness':
+        f_date = f_name.split('_')[0]
+        f_country = f_name.split('_')[1].split('.')[0]
+        ets.add_to_sql(tb_name, resp_data, snap_date=f_date, country=f_country)
+    if tb_name in ['AscSearchWeek', 'AscSearchMonth']:
+        ets.add_to_sql(tb_name, resp_data)
+    log.info('Add %s to sql success, moving file bak...' % f)
+    shutil.move(f_path, d_path)
+
+
 if __name__ == '__main__':
 
-    tb_name = 'AscAsinBussiness'
-    file_path = '/home/data/bussiness/parse/'
-    dst_path = '/home/data/bussiness/achieve/'
+    tb_names = api_config.file_sql_name
+    for tb in tb_names:
+        src_path = api_config.file_path.get(tb).get('src')
+        dst_path = api_config.file_path.get(tb).get('dst')
 
-    files = os.listdir(file_path)
-    if files:
-        log.info('Starting add file to sql... | FileCount: %s' % len(files))
-        for f in files:
-            f_name = file_path + f
-            f_date = f.split('_')[0]
-            f_country = f.split('_')[1].split('.')[0]
-            ets = ExcelToSql()
-            resp_data = ets.data_to_json(f_name)
-            try:
-                ets.add_to_sql(tb_name, resp_data, snap_date=f_date, country=f_country)
-                log.info('Add %s to sql success, moving file...' % f_name)
-                shutil.move(f_name, dst_path + f)
-            except Exception as e:
-                log.error('Add to sql error: %s' % e)
-        log.info('Add file to sql success!')
-    else:
-        log.info('Now is no files.')
+        files = os.listdir(src_path)
+        if files:
+            log.info('Starting add file to sql... | FileCount: %s' % len(files))
+            for f in files:
+                try:
+                    start_add_files(f, src_path, dst_path, tb)
+                except Exception as e:
+                    log.error('Add to sql error: %s' % e)
+            log.info('Add file to sql success!')
+        else:
+            log.info('TB: %s Now is no files.' % tb)
