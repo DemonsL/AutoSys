@@ -32,6 +32,9 @@ class ExcelToSql:
             tb_excute = 'bussiness.{}'.format(tb_name)
             b_session = bussiness.DBSession()
             for data in json_data:
+                k = data.get('Search Term')
+                if not k:
+                    log.info('k: %s' % data)
                 data_to_sql = eval(tb_excute)(snap_date, country, data)
                 b_session.add(data_to_sql)
             b_session.commit()
