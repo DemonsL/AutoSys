@@ -59,7 +59,8 @@ class ExcelToSql:
 if __name__ == '__main__':
 
     tb_name = 'AscAsinBussiness'
-    file_path = '/home/data/bussiness/'
+    file_path = '/home/data/bussiness/parse/'
+    dst_path = '/home/data/bussiness/achieve/'
 
     files = os.listdir(file_path)
     if files:
@@ -73,7 +74,7 @@ if __name__ == '__main__':
             try:
                 ets.add_to_sql(tb_name, resp_data, snap_date=f_date, country=f_country)
                 log.info('Add %s to sql success, moving file...' % f_name)
-                # shutil.move(f_name, dst_path + f)
+                shutil.move(f_name, dst_path + f)
             except Exception as e:
                 log.error('Add to sql error: %s' % e)
         log.info('Add file to sql success!')
