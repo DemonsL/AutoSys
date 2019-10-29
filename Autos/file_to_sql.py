@@ -72,8 +72,9 @@ def start_add_files(f_name, s_path, d_path, tb_name):
         data_week = datetime.datetime.strptime(resp_time, '%m/%d/%y').strftime('%Y%V')
         ets.add_to_sql(tb_name, resp_data, snap_date=data_week)
         d_name = data_week + '.xlsx'
-        os.renames(f_name, d_name)
-        shutil.move(s_path + d_name, d_path)
+        new_path = s_path + d_name
+        os.renames(f_path, new_path)
+        shutil.move(new_path, d_path)
     log.info('Add %s to sql success, moving file bak...' % f)
 
 
