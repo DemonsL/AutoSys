@@ -1,6 +1,5 @@
 # coding: utf-8
-import os, sys, shutil
-sys.path.append('../')
+import os, shutil
 import json
 import logging
 import datetime
