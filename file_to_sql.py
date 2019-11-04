@@ -68,13 +68,17 @@ def start_add_files(f_name, s_path, d_path, tb_name):
         ets.add_to_sql(tb_name, resp_data, snap_date=f_date, country=f_country)
         shutil.move(f_path, d_path)
     if tb_name in ['AscSearchWeek', 'AscSearchMonth']:
-        data_week = datetime.datetime.strptime(resp_time, '%m/%d/%y').strftime('%Y%V')
-        ets.add_to_sql(tb_name, resp_data, snap_date=data_week)
-        d_name = data_week + '.xlsx'
+        data_period = ''
+        if tb_name == 'AscSearchWeek':
+            data_period = datetime.datetime.strptime(resp_time, '%m/%d/%y').strftime('%Y%V')
+        if tb_name == 'AscSearchMonth':
+            data_period = datetime.datetime.strptime(resp_time, '%m/%d/%y').strftime('%Y%m')
+        ets.add_to_sql(tb_name, resp_data, snap_date=data_period)
+        d_name = data_period + '.xlsx'
         new_path = s_path + d_name
         os.renames(f_path, new_path)
         shutil.move(new_path, d_path)
-    log.info('Add %s to sql success, moving file bak...' % f)
+    log.info('Add %s: %s to sql success, moving file bak...' % (tb_name, f))
 
 
 if __name__ == '__main__':
