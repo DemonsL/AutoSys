@@ -44,6 +44,20 @@ class FileToSql:
                 s_session.add(data_to_sql)
             s_session.commit()
 
+    def get_bussiness(self, snap_date):
+        session = bussiness.DBSession()
+        buss = session.query(bussiness.AscAsinBussiness, bussiness.AscAsinBussiness.SnapDate)\
+                      .filter_by(SnapDate=snap_date).all()
+        session.close()
+        return buss
+
+    def delete_bussiness(self, snap_date):
+        session = bussiness.DBSession()
+        buss = session.query(bussiness.AscAsinBussiness).filter_by(SnapDate=snap_date).all()
+        for bu in buss:
+            session.delete(bu)
+        session.commit()
+
     def data_to_json(self, file_name):
         f_format = file_name.split('.')[1]
         data = ''
@@ -65,6 +79,9 @@ def start_add_files(f_name, s_path, d_path, tb_name):
     if tb_name == 'AscAsinBussiness':
         f_date = f_name.split('_')[0]
         f_country = f_name.split('_')[1].split('.')[0]
+        # 数据有更新时删除旧数据
+        if ets.get_bussiness(f_date):
+            ets.delete_bussiness(f_date)
         ets.add_to_sql(tb_name, resp_data, snap_date=f_date, country=f_country)
         shutil.move(f_path, d_path)
     if tb_name in ['AscSearchWeek', 'AscSearchMonth']:
