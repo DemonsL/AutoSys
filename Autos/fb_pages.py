@@ -14,10 +14,10 @@ file_name = '/home/develop/logs/fb_logs/{}.log'.format(datetime.date.today())
 log = logging.getLogger()
 log.setLevel(logging.INFO)
 
-fh = logging.FileHandler(file_name, mode='a+')
-fh.setLevel(logging.DEBUG)
-fh.setFormatter(formatter)
-log.addHandler(fh)
+# fh = logging.FileHandler(file_name, mode='a+')
+# fh.setLevel(logging.DEBUG)
+# fh.setFormatter(formatter)
+# log.addHandler(fh)
 
 ch = logging.StreamHandler()
 ch.setLevel(logging.INFO)
@@ -34,6 +34,9 @@ class FbPages:
     def get_likes(self, so):
         return so.find('span', attrs={'id': 'PagesLikesCountDOMID'}).text.split(' ')[0].replace(',', '')
 
+    def get_site(self, so):
+        return so.find('img', attrs={'src': 'https://static.xx.fbcdn.net/rsrc.php/v3/yV/r/EaDvTjOwxIV.png'}) \
+                 .parent.parent.text
 
     def get_terms(self, so):
         return so.find('div', attrs={'class': '_4bl9 _5m_o'}).text
@@ -83,7 +86,8 @@ if __name__ == '__main__':
             pgab_resp = requests.get(pg_link + 'about/?ref=page_internal', headers=headers, proxies=proxies)
             pgab_soup = BeautifulSoup(pgab_resp.text, 'lxml')
             pgab_terms = fp.get_terms(pgab_soup)
-            pg_re = (pg_link, pg_name, pg_likes, pgab_terms)
+            pgab_site = fp.get_site(pgab_soup)
+            pg_re = (pg_link, pg_name, pg_likes, pgab_terms, pgab_site)
             log.info(pg_re)
             # 写入文件
             with open('../fp_csv.csv', 'a', encoding='utf-8') as f:
