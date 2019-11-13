@@ -35,8 +35,13 @@ class FbPages:
         return so.find('span', attrs={'id': 'PagesLikesCountDOMID'}).text.split(' ')[0].replace(',', '')
 
     def get_site(self, so):
-        return so.find('img', attrs={'src': 'https://static.xx.fbcdn.net/rsrc.php/v3/yV/r/EaDvTjOwxIV.png'}) \
-                 .parent.parent.text
+        site = ''
+        try:
+            site = so.find('img', attrs={'src': 'https://static.xx.fbcdn.net/rsrc.php/v3/yV/r/EaDvTjOwxIV.png'}) \
+                     .parent.parent.text
+        except Exception as e:
+            log.error('GetSiteError: %s' % e)
+        return site
 
     def get_terms(self, so):
         return so.find('div', attrs={'class': '_4bl9 _5m_o'}).text
