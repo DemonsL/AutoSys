@@ -14,10 +14,10 @@ file_name = '/home/develop/logs/fb_logs/{}.log'.format(datetime.date.today())
 log = logging.getLogger()
 log.setLevel(logging.INFO)
 
-# fh = logging.FileHandler(file_name, mode='a+')
-# fh.setLevel(logging.DEBUG)
-# fh.setFormatter(formatter)
-# log.addHandler(fh)
+fh = logging.FileHandler(file_name, mode='a+')
+fh.setLevel(logging.DEBUG)
+fh.setFormatter(formatter)
+log.addHandler(fh)
 
 ch = logging.StreamHandler()
 ch.setLevel(logging.INFO)
@@ -32,7 +32,12 @@ class FbPages:
             yield link.attrs.get('href'), link.text
 
     def get_likes(self, so):
-        return so.find('span', attrs={'id': 'PagesLikesCountDOMID'}).text.split(' ')[0].replace(',', '')
+        likes = ''
+        try:
+            likes = so.find('span', attrs={'id': 'PagesLikesCountDOMID'}).text.split(' ')[0].replace(',', '')
+        except Exception as e:
+            log.error('GetLikesError: %s' % e)
+        return likes
 
     def get_site(self, so):
         site = ''
