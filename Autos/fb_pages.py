@@ -7,6 +7,7 @@ import logging
 import random
 import requests
 from bs4 import BeautifulSoup
+from fake_useragent import UserAgent
 
 
 formatter = logging.Formatter("%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s")
@@ -61,7 +62,6 @@ if __name__ == '__main__':
 
     url = 'https://www.facebook.com/pages/category/topic-shopping-retail/?page={}'
     headers = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36',
         'referer': 'https://www.facebook.com/pages/category/topic-shopping-retail/',
         'accept-language': 'en-us'
     }
@@ -74,13 +74,17 @@ if __name__ == '__main__':
         '106.52.68.116:25417'
     ]
 
+    ua = UserAgent()
     fp = FbPages()
-    for i in range(7, 3000):
+    for i in range(59, 3000):
         log.info(url.format(i + 1))
+        user_agent = {
+            'user_agent': ua.random
+        }
         proxies = {
             'http': 'http://{}'.format(random.choice(ip_ports))
         }
-        resp = requests.get(url.format(i + 1), headers=headers, proxies=proxies)
+        resp = requests.get(url.format(i + 1), headers=headers.update(user_agent), proxies=proxies)
         soup = BeautifulSoup(resp.text, 'lxml')
         hidden_elem = soup.find('div', attrs={'class': 'hidden_elem'}).string
         # fb网页被注释，需要再次解析
