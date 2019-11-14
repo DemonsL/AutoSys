@@ -50,7 +50,12 @@ class FbPages:
         return site
 
     def get_terms(self, so):
-        return so.find('div', attrs={'class': '_4bl9 _5m_o'}).text
+        terms = ''
+        try:
+            terms = so.find('div', attrs={'class': '_4bl9 _5m_o'}).text
+        except Exception as e:
+            log.error('GetTermsError: %s' % e)
+        return terms
 
 
 
@@ -78,7 +83,7 @@ if __name__ == '__main__':
 
     ua = UserAgent()
     fp = FbPages()
-    for i in range(79, 3000):
+    for i in range(108, 3000):
         log.info(url.format(i + 1))
         with open('../fp_csv.csv', 'a', encoding='utf-8') as f:
             f.write(url.format(i + 1) + '\n')
@@ -100,6 +105,7 @@ if __name__ == '__main__':
             pg_soup = BeautifulSoup(pg_resp.text, 'lxml')
             pg_likes = fp.get_likes(pg_soup)
             # 解析About页面
+            time.sleep(8)
             pgab_resp = requests.get(pg_link + 'about/?ref=page_internal', headers=headers, proxies=proxies)
             pgab_soup = BeautifulSoup(pgab_resp.text, 'lxml')
             pgab_terms = fp.get_terms(pgab_soup)
@@ -109,4 +115,5 @@ if __name__ == '__main__':
             # 写入文件
             with open('../fp_csv.csv', 'a', encoding='utf-8') as f:
                 f.write(str(pg_re) + '\n')
+            time.sleep(8)
 
