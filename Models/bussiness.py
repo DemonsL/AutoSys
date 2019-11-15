@@ -36,17 +36,20 @@ class AscAsinBussiness(Base):
         self.ParentAsin = json_data.get('(Parent) ASIN')
         self.Asin = json_data.get('(Child) ASIN')
         self.Title = json_data.get('Title')
-        self.Sessions = json_data.get('Sessions')
+        self.Sessions = self.format_int(json_data.get('Sessions'))
         self.SessionPercentage = self.percentage_to_float(json_data.get('Session Percentage'))
-        self.PageViews = json_data.get('Page Views')
+        self.PageViews = self.format_int(json_data.get('Page Views'))
         self.PageViewsPercentage = self.percentage_to_float(json_data.get('Page Views Percentage'))
         self.BuyBoxPercentage = self.percentage_to_float(json_data.get('Buy Box Percentage'))
-        self.Units = json_data.get('Units Ordered')
+        self.Units = self.format_int(json_data.get('Units Ordered'))
         self.UnitSessionPercentage = self.percentage_to_float(json_data.get('Unit Session Percentage'))
         self.Revenue = float(json_data.get('Ordered Product Sales').strip('$').replace(',', ''))
-        self.Orders = json_data.get('Total Order Items')
+        self.Orders = self.format_int(json_data.get('Total Order Items'))
 
     def percentage_to_float(self, per_value):
         if per_value:
             f_value = float(per_value.strip('%')) / 100
             return f_value
+
+    def format_int(self, src_int):
+        return int(str(src_int).replace(',', ''))
