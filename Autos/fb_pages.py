@@ -4,10 +4,10 @@ sys.path.append('../')
 import time
 import datetime
 import logging
-import random
 import requests
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
+from Utils.common import RedisClient
 
 
 formatter = logging.Formatter("%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s")
@@ -70,20 +70,11 @@ if __name__ == '__main__':
         'referer': 'https://www.facebook.com/pages/category/topic-shopping-retail/',
         'accept-language': 'en-us'
     }
-    ip_ports = [
-        '121.40.199.105:80', '139.186.13.209:54808', '174.120.70.232:80', '145.239.120.150:3128',
-        '121.42.163.161:80', '123.206.227.91:46376', '210.242.179.118:80', '115.42.35.18:4220',
-        '116.199.2.196:80', '106.53.169.125:46554', '139.199.207.26:3128', '139.5.71.80:23500',
-        '114.116.75.60:60562', '129.28.109.202:46350', '221.180.170.8:8080', '157.52.208.86:3129',
-        '119.3.37.101:36194', '129.28.40.119:50607', '125.118.149.224:808', '170.210.80.241:3128',
-        '106.52.68.116:25417', '39.105.24.57:51857', '114.219.26.77:8998', '118.175.207.180:40017',
-        '1.20.97.96:54205', '85.234.126.107:55555', '202.179.7.158:23500', '36.81.252.104:8080',
-        '84.241.44.182:8080', '218.94.153.150:8008', '103.216.82.146:6666', '93.78.205.197:57437'
-    ]
 
     ua = UserAgent()
     fp = FbPages()
-    for i in range(108, 3000):
+    rc = RedisClient()
+    for i in range(477, 3000):
         log.info(url.format(i + 1))
         with open('../fp_csv.csv', 'a', encoding='utf-8') as f:
             f.write(url.format(i + 1) + '\n')
@@ -91,7 +82,7 @@ if __name__ == '__main__':
             'user_agent': ua.random
         }
         proxies = {
-            'http': 'http://{}'.format(random.choice(ip_ports))
+            'http': 'http://{}'.format(rc.random())
         }
         resp = requests.get(url.format(i + 1), headers=headers.update(user_agent), proxies=proxies)
         soup = BeautifulSoup(resp.text, 'lxml')
@@ -105,7 +96,7 @@ if __name__ == '__main__':
             pg_soup = BeautifulSoup(pg_resp.text, 'lxml')
             pg_likes = fp.get_likes(pg_soup)
             # 解析About页面
-            time.sleep(8)
+            time.sleep(5)
             pgab_resp = requests.get(pg_link + 'about/?ref=page_internal', headers=headers, proxies=proxies)
             pgab_soup = BeautifulSoup(pgab_resp.text, 'lxml')
             pgab_terms = fp.get_terms(pgab_soup)
@@ -115,5 +106,5 @@ if __name__ == '__main__':
             # 写入文件
             with open('../fp_csv.csv', 'a', encoding='utf-8') as f:
                 f.write(str(pg_re) + '\n')
-            time.sleep(8)
+            time.sleep(5)
 
