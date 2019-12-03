@@ -1,6 +1,8 @@
 # coding: utf-8
+import sys
+sys.path.append('../')
 from scrapy.crawler import CrawlerProcess
-from .Crawls.spiders import amz_tops
+from Crawls.Crawls.spiders import amz_tops
 
 
 
