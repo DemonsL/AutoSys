@@ -4,9 +4,10 @@ from .Crawls.spiders import amz_tops
 
 
 
-
-if __name__ == '__main__':
-
+def main():
     process = CrawlerProcess()
     process.crawl(amz_tops)
     process.start()
+
+
+main()
