@@ -1,6 +1,6 @@
 # coding: utf-8
 from scrapy.crawler import CrawlerProcess
-from Crawls.Crawls.spiders import amz_tops
+from .Crawls.spiders import amz_tops
 
 
 
