@@ -106,7 +106,7 @@ AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 # redis 配置
-REDIS_HOST = '127.0.0.1'
+REDIS_HOST = '47.251.1.157'
 REDIS_PORT = 6379
 REDIS_PASS = 'discover_1'
 # REDIS_DB_INDEX = 0

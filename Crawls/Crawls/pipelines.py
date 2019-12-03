@@ -8,7 +8,7 @@ import json
 import logging
 import datetime
 import redis
-from .settings import REDIS_HOST, REDIS_PORT
+from .settings import REDIS_HOST, REDIS_PORT, REDIS_PASS
 from .db_models import DBSession, ApbBestSeller
 from sqlalchemy import and_
 
@@ -21,7 +21,7 @@ class CrawlsPipeline(object):
     snap_data = datetime.datetime.today().date()
 
     def open_spider(self, spider):
-        self.conn = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
+        self.conn = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASS, decode_responses=True)
 
     def process_item(self, item, spider):
         self.conn.lpush(self.item_key, json.dumps(dict(item)))
