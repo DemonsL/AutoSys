@@ -56,6 +56,7 @@ class PubCategory(Base):
 
     __tablename__ = 'Pub_Category'
 
+    Country = Column(String(20), primary_key=True)
     SubCategoryID = Column(String(100), primary_key=True)
     Level  = Column(Integer)
 

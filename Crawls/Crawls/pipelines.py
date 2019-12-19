@@ -35,22 +35,6 @@ class CrawlsPipeline(object):
         if self.conn.llen(self.item_key):
             self.add_best_seller()
 
-    # def sort_items(self):
-    #     for it in self.get_best_seller():
-    #         s_value = str(it[1]) + ',' + str(it[2])
-    #         self.conn.sadd(self.sql_key, s_value)
-    #     while self.conn.llen(self.item_key):
-    #         item_data = json.loads(self.conn.lpop(self.item_key))
-    #         cate = item_data.get('CategoryID')
-    #         rank = item_data.get('Rank')
-    #         sis_value = str(cate) + ',' + str(rank)
-    #         if self.conn.sismember(self.sql_key, sis_value):
-    #             self.conn.lpush(self.up_key, json.dumps(item_data))
-    #         else:
-    #             self.conn.lpush(self.add_key, json.dumps(item_data))
-    #     while self.conn.scard(self.sql_key):
-    #         self.conn.spop(self.sql_key)
-
 
     # ------ 数据库处理方法 -------
 
@@ -63,6 +47,18 @@ class CrawlsPipeline(object):
             session.commit()
         except Exception as e:
             logger.info('AddBestSellerError: %s' % e)
+        finally:
+            session.close()
+
+    def del_best_seller(self):
+        session = DBSession()
+        try:
+            session.query(ApbBestSeller).filter(and_(ApbBestSeller.SnapDate == self.snap_data,
+                                                     ApbBestSeller.Country == 'US')) \
+                                        .delete(synchronize_session=False)
+            session.commit()
+        except Exception as e:
+            logger.info('DeleteBestSellerError: %s' % e)
         finally:
             session.close()
 
@@ -83,17 +79,7 @@ class CrawlsPipeline(object):
     #     finally:
     #         session.close()
 
-    def del_best_seller(self):
-        session = DBSession()
-        try:
-            session.query(ApbBestSeller).filter(and_(ApbBestSeller.SnapDate == self.snap_data,
-                                                     ApbBestSeller.Country == 'US')) \
-                                        .delete(synchronize_session=False)
-            session.commit()
-        except Exception as e:
-            logger.info('DeleteBestSellerError: %s' % e)
-        finally:
-            session.close()
+
 
 
 
