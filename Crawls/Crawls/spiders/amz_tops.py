@@ -58,7 +58,7 @@ class AmzTopSpider(scrapy.Spider):
         if country == 'UK':
             return p_price.strip('£').split(' -')[0].replace(',', '')
         if country == 'DE':
-            return p_price.strip('\u00a0€').split(' -')[0].replace(',', '.')
+            return p_price.strip('\u00a0€').strip('EUR ').split(' -')[0].replace(',', '.')
 
     def get_urls(self):
         urls = []
