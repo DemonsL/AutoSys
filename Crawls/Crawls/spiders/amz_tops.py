@@ -41,7 +41,7 @@ class AmzTopSpider(scrapy.Spider):
                 item['Title'] = li.find('div', attrs={'aria-hidden': 'true'}).text.strip()
                 item['Star'] = self.parse_star(p_country, li.find('span', attrs={'class': 'a-icon-alt'}).text)
                 item['Review'] = li.find('a', attrs={'class': 'a-size-small a-link-normal'}).text.replace(',', '').replace('.', '')
-                item['Price'] = self.parse_price(p_country, li.find('span', attrs={'class': 'p13n-sc-price'}).text)
+                item['Price'] = self.parse_price(p_country, li.find('span', attrs={'class': 'p13n-sc-price'}))
                 yield item
             except Exception as e:
                 logger.info('ParseError: %s' % e)
@@ -53,12 +53,15 @@ class AmzTopSpider(scrapy.Spider):
             return p_star.split(' von')[0].replace(',', '.')
 
     def parse_price(self, country, p_price):
-        if country == 'US':
-            return p_price.strip('$').split(' -')[0].replace(',', '')
-        if country == 'UK':
-            return p_price.strip('£').split(' -')[0].replace(',', '')
-        if country == 'DE':
-            return p_price.strip('\u00a0€').strip('EUR ').split(' -')[0].replace(',', '.')
+        try:
+            if country == 'US':
+                return p_price.text.strip('$').split(' -')[0].replace(',', '')
+            if country == 'UK':
+                return p_price.text.strip('£').split(' -')[0].replace(',', '')
+            if country == 'DE':
+                return p_price.text.strip('\u00a0€').strip('EUR ').split(' -')[0].replace(',', '.')
+        except:
+            return 0.0
 
     def get_urls(self):
         urls = []
