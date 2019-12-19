@@ -10,7 +10,6 @@ import datetime
 import redis
 from .settings import REDIS_HOST, REDIS_PORT, REDIS_PASS
 from .db_models import DBSession, ApbBestSeller
-from sqlalchemy import and_
 
 logger = logging.getLogger(__name__)
 
@@ -53,8 +52,7 @@ class CrawlsPipeline(object):
     def del_best_seller(self):
         session = DBSession()
         try:
-            session.query(ApbBestSeller).filter(and_(ApbBestSeller.SnapDate == self.snap_data,
-                                                     ApbBestSeller.Country == 'US')) \
+            session.query(ApbBestSeller).filter(ApbBestSeller.SnapDate == self.snap_data) \
                                         .delete(synchronize_session=False)
             session.commit()
         except Exception as e:
