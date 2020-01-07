@@ -79,15 +79,15 @@ class FileToSql:
 
     def delete_payments(self, snap_date, country, inv_type):
         session = settlements.DBSession()
-        del_orders = 'delete from Asc_Payments_Order as t where date_format(t.PurchaseDate, "%Y%m") = "{sd}"' \
+        del_orders = 'delete from Asc_Payments_Order as t where date_format(t.PurchaseDate, "%Y%m") = "{sd}" ' \
                      'and t.Country = "{ct}" and t.InvoiceType = "{it}"'.format(sd = snap_date,
                                                                                  ct = country,
                                                                                  it = inv_type)
-        del_fees = 'delete from Asc_Payments_Fee as t where date_format(t.SnapDate, "%Y%m") = "{sd}"' \
+        del_fees = 'delete from Asc_Payments_Fee as t where date_format(t.SnapDate, "%Y%m") = "{sd}" ' \
                      'and t.Country = "{ct}" and t.InvoiceType = "{it}"'.format(sd = snap_date,
                                                                                  ct = country,
                                                                                  it = inv_type)
-        del_account = 'delete from Asc_Payments_Account as t where date_format(t.SnapDate, "%Y%m") = "{sd}"' \
+        del_account = 'delete from Asc_Payments_Account as t where date_format(t.SnapDate, "%Y%m") = "{sd}" ' \
                      'and t.Country = "{ct}" and t.InvoiceType = "{it}"'.format(sd = snap_date,
                                                                                  ct = country,
                                                                                  it = inv_type)
@@ -139,9 +139,9 @@ def start_add_files(f_name, s_path, d_path, tb_name):
         os.renames(f_path, new_path)
         shutil.move(new_path, d_path)
     if tb_name == 'AscPayments':
-        f_date = f_name.split('_')[0]
-        f_country = f_name.split('_')[1]
-        ets.invoice = 'Invoiced' if (f_name.split('_')[-1] == 'Inv') else 'Standard'
+        f_date = f_name.split('.')[0].split('_')[0]
+        f_country = f_name.split('.')[0].split('_')[1]
+        ets.invoice = 'Invoiced' if (f_name.split('.')[0].split('_')[-1] == 'Inv') else 'Standard'
         # 数据有更新时删除旧数据
         ets.delete_payments(f_date, f_country, ets.invoice)
         ets.add_to_sql(tb_name, resp_data, country=f_country)
