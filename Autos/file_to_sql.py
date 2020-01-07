@@ -167,11 +167,3 @@ if __name__ == '__main__':
             log.info('Add file to sql success!')
         else:
             log.info('TB: %s Now is no files.' % tb)
-
-    # log.info('Start file to sql...')
-    # fts = FileToSql()
-    # log.info('Read file...')
-    # asc_pay = fts.data_to_json('AscPayments', 'C:/Users/coolpad/Desktop/1.csv')
-    # log.info('To sql...')
-    # fts.add_to_sql('AscPayments', asc_pay[0], country='US')
-    # log.info('End file to sql!')
