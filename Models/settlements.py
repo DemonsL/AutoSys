@@ -48,7 +48,7 @@ class AscPaymentsOrder(Base):
     Currency = Column(String(20))
 
     def __init__(self, country, currency, invoice, order_detail):
-        self.PurchaseDate = date_format(order_detail.get('date/time').strip(' PST'))
+        self.PurchaseDate = date_format(order_detail.get('date/time'), country)
         self.Country = country
         self.InvoiceType = invoice
         self.SettlementId = order_detail.get('settlement id')
@@ -94,7 +94,7 @@ class AscPaymentsAccount(Base):
     Currency = Column(String(20))
 
     def __init__(self, country, currency, invoice, account_detail):
-        self.SnapDate = date_format(account_detail.get('date/time').strip(' PST'))
+        self.SnapDate = date_format(account_detail.get('date/time'), country)
         self.Country = country
         self.InvoiceType = invoice
         self.SettlementId = account_detail.get('settlement id')
@@ -119,7 +119,7 @@ class AscPaymentsFee(Base):
     Currency = Column(String(20))
 
     def __init__(self, country, currency, invoice, fee_detail):
-        self.SnapDate = date_format(fee_detail.get('date/time').strip(' PST'))
+        self.SnapDate = date_format(fee_detail.get('date/time'), country)
         self.Country = country
         self.InvoiceType = invoice
         self.SettlementId = fee_detail.get('settlement id')
@@ -129,9 +129,15 @@ class AscPaymentsFee(Base):
         self.Currency = currency
 
 
-# 12小时制转24小时制
-def date_format(src_date):
-    format_str = '%b %d, %Y %I:%M:%S %p'
+# 不同站点时间格式
+def date_format(src_date, ct):
+    format_str = ''
+    if ct == 'US':    # 12小时制转24小时制
+        src_date = src_date.strip(' PST')
+        format_str = '%b %d, %Y %I:%M:%S %p'
+    if ct == 'UK':
+        src_date = src_date.strip(' GMT+00:00')
+        format_str = '%d %b %Y %H:%M:%S'
     return datetime.datetime.strptime(src_date, format_str)
 
 def fee_format(fee):

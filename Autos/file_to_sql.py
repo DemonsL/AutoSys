@@ -98,14 +98,15 @@ class FileToSql:
         session.close()
 
 
-    def data_to_json(self, tb_name, file_name):
+    def data_to_json(self, tb_name, file_name, country=None):
         f_format = file_name.split('.')[1]
         data = ''
         data_time = ''
         if f_format == 'csv':
             if tb_name == 'AscPayments':
+                h_num = 7 if (country in ['US', 'CA']) else 6
                 self.currency = pd.read_csv(file_name, nrows=1, encoding='utf-8').values[0][0].split(',')[0].split(' ')[-1]
-                data = pd.read_csv(file_name, header=7, encoding='utf-8')
+                data = pd.read_csv(file_name, header=h_num, encoding='utf-8')
             else:
                 data = pd.read_csv(file_name, encoding='utf-8')
         if f_format == 'xlsx':
@@ -119,16 +120,17 @@ class FileToSql:
 def start_add_files(f_name, s_path, d_path, tb_name):
     ets = FileToSql()
     f_path = s_path + f_name
-    resp_data, resp_time = ets.data_to_json(tb_name, f_path)
     if tb_name == 'AscAsinBussiness':
         f_date = f_name.split('_')[0]
         f_country = f_name.split('_')[1].split('.')[0]
         # 数据有更新时删除旧数据
         if ets.get_bussiness(f_date):
             ets.delete_bussiness(f_date)
+        resp_data, resp_time = ets.data_to_json(tb_name, f_path)
         ets.add_to_sql(tb_name, resp_data, snap_date=f_date, country=f_country)
         shutil.move(f_path, d_path)
     if tb_name in ['AscSearchWeek', 'AscSearchMonth']:
+        resp_data, resp_time = ets.data_to_json(tb_name, f_path)
         data_period = ''
         if tb_name == 'AscSearchWeek':
             data_period = datetime.datetime.strptime(resp_time, '%m/%d/%y').strftime('%Y%V')
@@ -147,6 +149,7 @@ def start_add_files(f_name, s_path, d_path, tb_name):
         log.info('Delete old data...')
         ets.delete_payments(f_date, f_country, ets.invoice)
         log.info('Delete old data end!')
+        resp_data, resp_time = ets.data_to_json(tb_name, f_path, country=f_country)
         ets.add_to_sql(tb_name, resp_data, country=f_country)
         if os.path.exists(d_path + f_name):
             os.remove(d_path + f_name)
