@@ -94,6 +94,7 @@ class FileToSql:
         session.execute(del_orders)
         session.execute(del_fees)
         session.execute(del_account)
+        session.commit()
         session.close()
 
 
