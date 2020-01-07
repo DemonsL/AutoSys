@@ -143,7 +143,9 @@ def start_add_files(f_name, s_path, d_path, tb_name):
         f_country = f_name.split('.')[0].split('_')[1]
         ets.invoice = 'Invoiced' if (f_name.split('.')[0].split('_')[-1] == 'Inv') else 'Standard'
         # 数据有更新时删除旧数据
+        log.info('Delete old data...')
         ets.delete_payments(f_date, f_country, ets.invoice)
+        log.info('Delete old data end!')
         ets.add_to_sql(tb_name, resp_data, country=f_country)
         shutil.move(f_path, d_path)
     log.info('Add %s: %s to sql success, moving file bak...' % (tb_name, f))
