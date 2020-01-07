@@ -148,6 +148,8 @@ def start_add_files(f_name, s_path, d_path, tb_name):
         ets.delete_payments(f_date, f_country, ets.invoice)
         log.info('Delete old data end!')
         ets.add_to_sql(tb_name, resp_data, country=f_country)
+        if os.path.exists(d_path + f_name):
+            os.remove(d_path + f_name)
         shutil.move(f_path, d_path)
     log.info('Add %s: %s to sql success, moving file bak...' % (tb_name, f))
 
