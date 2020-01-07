@@ -1,5 +1,5 @@
 
-file_sql_name = ['AscAsinBussiness', 'AscSearchWeek', 'AscSearchMonth']
+file_sql_name = ['AscAsinBussiness', 'AscSearchWeek', 'AscSearchMonth', 'AscPayments']
 
 file_path = {
     'AscAsinBussiness': {
@@ -13,5 +13,9 @@ file_path = {
     'AscSearchMonth':{
         'src': '/home/data/keyword/parse/month/',
         'dst': '/home/data/keyword/achieve/month/'
+    },
+    'AscPayments':{
+        'src': '/home/data/payments/parse/',
+        'dst': '/home/data/payments/achieve/'
     }
 }

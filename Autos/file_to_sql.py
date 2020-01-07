@@ -9,6 +9,7 @@ import pandas as pd
 from Config import api_config
 from Models import bussiness
 from Models import search_words
+from Models import settlements
 
 
 formatter = logging.Formatter("%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s")
@@ -29,6 +30,9 @@ log.addHandler(ch)
 
 class FileToSql:
 
+    currency = ''
+    invoice = ''
+
     def add_to_sql(self, tb_name, json_data, snap_date=None, country=None):
         if tb_name == 'AscAsinBussiness':
             tb_excute = 'bussiness.{}'.format(tb_name)
@@ -46,6 +50,19 @@ class FileToSql:
                 s_session.add(data_to_sql)
             s_session.commit()
 
+        if tb_name == 'AscPayments':
+            st_session = settlements.DBSession()
+            for data in json_data:
+                d_type = data.get('type')
+                if d_type in ['Order', 'Refund']:
+                    data_to_sql = settlements.AscPaymentsOrder(country, self.currency, self.invoice, data)
+                elif d_type == 'Transfer':
+                    data_to_sql = settlements.AscPaymentsAccount(country, self.currency, self.invoice, data)
+                else:
+                    data_to_sql = settlements.AscPaymentsFee(country, self.currency, self.invoice, data)
+                st_session.add(data_to_sql)
+            st_session.commit()
+
     def get_bussiness(self, snap_date):
         session = bussiness.DBSession()
         buss = session.query(bussiness.AscAsinBussiness, bussiness.AscAsinBussiness.SnapDate)\
@@ -60,12 +77,36 @@ class FileToSql:
             session.delete(bu)
         session.commit()
 
-    def data_to_json(self, file_name):
+    def delete_payments(self, snap_date, country, inv_type):
+        session = settlements.DBSession()
+        del_orders = 'delete from Asc_Payments_Order as t where date_format(t.PurchaseDate, "%Y%m") = "{sd}"' \
+                     'and t.Country = "{ct}" and t.InvoiceType = "{it}"'.format(sd = snap_date,
+                                                                                 ct = country,
+                                                                                 it = inv_type)
+        del_fees = 'delete from Asc_Payments_Fee as t where date_format(t.SnapDate, "%Y%m") = "{sd}"' \
+                     'and t.Country = "{ct}" and t.InvoiceType = "{it}"'.format(sd = snap_date,
+                                                                                 ct = country,
+                                                                                 it = inv_type)
+        del_account = 'delete from Asc_Payments_Account as t where date_format(t.SnapDate, "%Y%m") = "{sd}"' \
+                     'and t.Country = "{ct}" and t.InvoiceType = "{it}"'.format(sd = snap_date,
+                                                                                 ct = country,
+                                                                                 it = inv_type)
+        session.execute(del_orders)
+        session.execute(del_fees)
+        session.execute(del_account)
+        session.close()
+
+
+    def data_to_json(self, tb_name, file_name):
         f_format = file_name.split('.')[1]
         data = ''
         data_time = ''
         if f_format == 'csv':
-            data = pd.read_csv(file_name, encoding='utf-8')
+            if tb_name == 'AscPayments':
+                self.currency = pd.read_csv(file_name, nrows=1, encoding='utf-8').values[0][0].split(',')[0].split(' ')[-1]
+                data = pd.read_csv(file_name, header=7, encoding='utf-8')
+            else:
+                data = pd.read_csv(file_name, encoding='utf-8')
         if f_format == 'xlsx':
             d_keys = pd.read_excel(file_name, encoding='utf-8').keys()
             data_time = d_keys[4].split('-')[1].strip(']').strip()
@@ -77,7 +118,7 @@ class FileToSql:
 def start_add_files(f_name, s_path, d_path, tb_name):
     ets = FileToSql()
     f_path = s_path + f_name
-    resp_data, resp_time = ets.data_to_json(f_path)
+    resp_data, resp_time = ets.data_to_json(tb_name, f_path)
     if tb_name == 'AscAsinBussiness':
         f_date = f_name.split('_')[0]
         f_country = f_name.split('_')[1].split('.')[0]
@@ -97,6 +138,14 @@ def start_add_files(f_name, s_path, d_path, tb_name):
         new_path = s_path + d_name
         os.renames(f_path, new_path)
         shutil.move(new_path, d_path)
+    if tb_name == 'AscPayments':
+        f_date = f_name.split('_')[0]
+        f_country = f_name.split('_')[1]
+        ets.invoice = 'Invoiced' if (f_name.split('_')[-1] == 'Inv') else 'Standard'
+        # 数据有更新时删除旧数据
+        ets.delete_payments(f_date, f_country, ets.invoice)
+        ets.add_to_sql(tb_name, resp_data, country=f_country)
+        shutil.move(f_path, d_path)
     log.info('Add %s: %s to sql success, moving file bak...' % (tb_name, f))
 
 
@@ -118,3 +167,11 @@ if __name__ == '__main__':
             log.info('Add file to sql success!')
         else:
             log.info('TB: %s Now is no files.' % tb)
+
+    # log.info('Start file to sql...')
+    # fts = FileToSql()
+    # log.info('Read file...')
+    # asc_pay = fts.data_to_json('AscPayments', 'C:/Users/coolpad/Desktop/1.csv')
+    # log.info('To sql...')
+    # fts.add_to_sql('AscPayments', asc_pay[0], country='US')
+    # log.info('End file to sql!')
