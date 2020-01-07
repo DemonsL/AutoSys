@@ -79,18 +79,18 @@ class FileToSql:
 
     def delete_payments(self, snap_date, country, inv_type):
         session = settlements.DBSession()
-        del_orders = 'delete from Asc_Payments_Order as t where date_format(t.PurchaseDate, "%Y%m") = "{sd}" ' \
-                     'and t.Country = "{ct}" and t.InvoiceType = "{it}"'.format(sd = snap_date,
-                                                                                 ct = country,
-                                                                                 it = inv_type)
-        del_fees = 'delete from Asc_Payments_Fee as t where date_format(t.SnapDate, "%Y%m") = "{sd}" ' \
-                     'and t.Country = "{ct}" and t.InvoiceType = "{it}"'.format(sd = snap_date,
-                                                                                 ct = country,
-                                                                                 it = inv_type)
-        del_account = 'delete from Asc_Payments_Account as t where date_format(t.SnapDate, "%Y%m") = "{sd}" ' \
-                     'and t.Country = "{ct}" and t.InvoiceType = "{it}"'.format(sd = snap_date,
-                                                                                 ct = country,
-                                                                                 it = inv_type)
+        del_orders = 'delete from Asc_Payments_Order where date_format(PurchaseDate, "%Y%m") = "{sd}" ' \
+                     'and Country = "{ct}" and InvoiceType = "{it}"'.format(sd = snap_date,
+                                                                            ct = country,
+                                                                            it = inv_type)
+        del_fees = 'delete from Asc_Payments_Fee where date_format(SnapDate, "%Y%m") = "{sd}" ' \
+                   'and Country = "{ct}" and InvoiceType = "{it}"'.format(sd = snap_date,
+                                                                          ct = country,
+                                                                          it = inv_type)
+        del_account = 'delete from Asc_Payments_Account where date_format(SnapDate, "%Y%m") = "{sd}" ' \
+                      'and Country = "{ct}" and InvoiceType = "{it}"'.format(sd = snap_date,
+                                                                             ct = country,
+                                                                             it = inv_type)
         session.execute(del_orders)
         session.execute(del_fees)
         session.execute(del_account)
