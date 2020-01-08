@@ -135,6 +135,9 @@ def date_format(src_date, ct):
     if ct == 'US':    # 12小时制转24小时制
         src_date = src_date.strip('PST').strip()
         format_str = '%b %d, %Y %I:%M:%S %p'
+    if ct == 'CA':
+        src_date = src_date.strip('PST').strip('PDT').strip()
+        format_str = '%Y-%m-%d %I:%M:%S %p'
     if ct == 'UK':
         src_date = src_date.strip('GMT+00:00').strip()
         format_str = '%d %b %Y %H:%M:%S'
