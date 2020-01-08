@@ -24,7 +24,7 @@ class AscPaymentsOrder(Base):
     AmazonOrderId = Column(String(25))
     Sku = Column(String(50))
     Unit = Column(Integer)
-    marketplace = Column(String(30))
+    marketplace = Column(String(50))
     Logistics = Column(String(30))
     AddrCity = Column(String(30))
     AddrState = Column(String(30))
