@@ -65,9 +65,9 @@ class AscPaymentsOrder(Base):
         self.Revnue = fee_format(order_detail.get('product sales'))
         self.TaxRevnue = fee_format(order_detail.get('product sales tax')) or 0
         self.RevShipping = fee_format(order_detail.get('shipping credits')) or fee_format(order_detail.get('postage credits'))
-        self.TaxShipping = fee_format(order_detail.get('shipping credits tax'))
+        self.TaxShipping = fee_format(order_detail.get('shipping credits tax')) or 0
         self.RevGiftwrap = fee_format(order_detail.get('gift wrap credits'))
-        self.TaxGiftwrap = fee_format(order_detail.get('giftwrap credits tax'))
+        self.TaxGiftwrap = fee_format(order_detail.get('giftwrap credits tax')) or 0
         self.RevPoint = fee_format(order_detail.get('Amazonポイントの費用')) or 0
         self.FeePromotionalRebates = fee_format(order_detail.get('promotional rebates'))
         self.TaxPromotionalRebates = fee_format(order_detail.get('promotional rebates tax')) or 0
