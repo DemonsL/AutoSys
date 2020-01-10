@@ -48,35 +48,35 @@ class AscPaymentsOrder(Base):
     Currency = Column(String(20))
 
     def __init__(self, country, currency, invoice, order_detail):
-        self.PurchaseDate = date_format(order_detail.get('date/time'), country)
+        self.PurchaseDate = date_format(order_detail, country)
         self.Country = country
         self.InvoiceType = invoice
-        self.SettlementId = order_detail.get('settlement id')
-        self.Type = order_detail.get('type')
-        self.AmazonOrderId = order_detail.get('order id')
-        self.Sku = order_detail.get('sku')
-        self.Unit = order_detail.get('quantity')
-        self.marketplace = order_detail.get('marketplace')
-        self.Logistics = order_detail.get('fulfillment') or order_detail.get('fulfilment')
-        self.AddrCity = order_detail.get('order city')
-        self.AddrState = order_detail.get('order state')
-        self.AddrPostal = order_detail.get('order postal')
-        self.TaxModel = order_detail.get('tax collection model')
-        self.Revnue = fee_format(order_detail.get('product sales'))
-        self.TaxRevnue = fee_format(order_detail.get('product sales tax')) or 0
-        self.RevShipping = fee_format(order_detail.get('shipping credits')) or fee_format(order_detail.get('postage credits'))
-        self.TaxShipping = fee_format(order_detail.get('shipping credits tax')) or 0
-        self.RevGiftwrap = fee_format(order_detail.get('gift wrap credits'))
-        self.TaxGiftwrap = fee_format(order_detail.get('giftwrap credits tax')) or 0
-        self.RevPoint = fee_format(order_detail.get('Amazonポイントの費用')) or 0
-        self.FeePromotionalRebates = fee_format(order_detail.get('promotional rebates'))
-        self.TaxPromotionalRebates = fee_format(order_detail.get('promotional rebates tax')) or 0
-        self.TaxMarketplaceWithheld = fee_format(order_detail.get('marketplace withheld tax')) or 0
-        self.FeeSelling = fee_format(order_detail.get('selling fees'))
-        self.FeeFba = fee_format(order_detail.get('fba fees'))
-        self.FeeOtherTransaction = fee_format(order_detail.get('other transaction fees'))
-        self.FeeOther = fee_format(order_detail.get('other'))
-        self.RevTotal = fee_format(order_detail.get('total'))
+        self.SettlementId = all_country_value(order_detail, 'SettlementId')
+        self.Type = all_country_value(order_detail, 'Type')
+        self.AmazonOrderId = all_country_value(order_detail, 'AmazonOrderId')
+        self.Sku = all_country_value(order_detail, 'Sku')
+        self.Unit = all_country_value(order_detail, 'Unit')
+        self.marketplace = all_country_value(order_detail, 'marketplace')
+        self.Logistics = all_country_value(order_detail, 'Logistics')
+        self.AddrCity = all_country_value(order_detail, 'AddrCity')
+        self.AddrState = all_country_value(order_detail, 'AddrState')
+        self.AddrPostal = all_country_value(order_detail, 'AddrPostal')
+        self.TaxModel = all_country_value(order_detail, 'TaxModel')
+        self.Revnue = fee_format(all_country_value(order_detail, 'Revnue'))
+        self.TaxRevnue = fee_format(all_country_value(order_detail, 'TaxRevnue'))
+        self.RevShipping = fee_format(all_country_value(order_detail, 'RevShipping'))
+        self.TaxShipping = fee_format(all_country_value(order_detail, 'TaxShipping'))
+        self.RevGiftwrap = fee_format(all_country_value(order_detail, 'RevGiftwrap'))
+        self.TaxGiftwrap = fee_format(all_country_value(order_detail, 'TaxGiftwrap'))
+        self.RevPoint = fee_format(all_country_value(order_detail, 'RevPoint'))
+        self.FeePromotionalRebates = fee_format(all_country_value(order_detail, 'FeePromotionalRebates'))
+        self.TaxPromotionalRebates = fee_format(all_country_value(order_detail, 'TaxPromotionalRebates'))
+        self.TaxMarketplaceWithheld = fee_format(all_country_value(order_detail, 'TaxMarketplaceWithheld'))
+        self.FeeSelling = fee_format(all_country_value(order_detail, 'FeeSelling'))
+        self.FeeFba = fee_format(all_country_value(order_detail, 'FeeFba'))
+        self.FeeOtherTransaction = fee_format(all_country_value(order_detail, 'FeeOtherTransaction'))
+        self.FeeOther = fee_format(all_country_value(order_detail, 'FeeOther'))
+        self.RevTotal = fee_format(all_country_value(order_detail, 'RevTotal'))
         self.Currency = currency
 
 
@@ -94,13 +94,13 @@ class AscPaymentsAccount(Base):
     Currency = Column(String(20))
 
     def __init__(self, country, currency, invoice, account_detail):
-        self.SnapDate = date_format(account_detail.get('date/time'), country)
+        self.SnapDate = date_format(account_detail, country)
         self.Country = country
         self.InvoiceType = invoice
-        self.SettlementId = account_detail.get('settlement id')
-        self.Type = account_detail.get('type')
-        self.Description = account_detail.get('description')
-        self.Amount = fee_format(account_detail.get('total'))
+        self.SettlementId = all_country_value(account_detail, 'SettlementId')
+        self.Type = all_country_value(account_detail, 'Type')
+        self.Description = all_country_value(account_detail, 'Description')
+        self.Amount = fee_format(all_country_value(account_detail, 'RevTotal'))
         self.Currency = currency
 
 
@@ -119,13 +119,13 @@ class AscPaymentsFee(Base):
     Currency = Column(String(20))
 
     def __init__(self, country, currency, invoice, fee_detail):
-        self.SnapDate = date_format(fee_detail.get('date/time'), country)
+        self.SnapDate = date_format(fee_detail, country)
         self.Country = country
         self.InvoiceType = invoice
-        self.SettlementId = fee_detail.get('settlement id')
-        self.Type = fee_detail.get('type')
-        self.FeeDescription = fee_detail.get('description')
-        self.FeeAmount = fee_format(fee_detail.get('total'))
+        self.SettlementId = all_country_value(fee_detail, 'SettlementId')
+        self.Type = all_country_value(fee_detail, 'Type')
+        self.FeeDescription = all_country_value(fee_detail, 'Description')
+        self.FeeAmount = fee_format(all_country_value(fee_detail, 'RevTotal'))
         self.Currency = currency
 
 
@@ -133,15 +133,77 @@ class AscPaymentsFee(Base):
 def date_format(src_date, ct):
     format_str = ''
     if ct == 'US':    # 12小时制转24小时制
-        src_date = src_date.strip('PST').strip()
+        src_date = src_date.get('date/time').strip('PST').strip()
         format_str = '%b %d, %Y %I:%M:%S %p'
-    if ct == 'CA':
-        src_date = src_date.strip('PST').strip('PDT').strip()
+    if ct == 'CA':    # 12小时制转24小时制
+        src_date = src_date.get('date/time').strip('PST').strip('PDT').strip()
         format_str = '%Y-%m-%d %I:%M:%S %p'
     if ct == 'UK':
-        src_date = src_date.strip('GMT+00:00').strip()
+        src_date = src_date.get('date/time').strip('GMT+00:00').strip()
         format_str = '%d %b %Y %H:%M:%S'
+    if ct == 'JP':
+        src_date = src_date.get('日付/時間').strip('JST')
+        format_str = '%Y/%m/%d %H:%M:%S'
     return datetime.datetime.strptime(src_date, format_str)
+
+# US、CA、UK、DE、JP
+def all_country_value(field_data, field_type):
+    field_value = ''
+    if field_type == 'SettlementId':
+        field_value = field_data.get('settlement id') or field_data.get('決済番号')
+    if field_type == 'Type':
+        field_value = field_data.get('type') or field_data.get('トランザクションの種類')
+    if field_type == 'AmazonOrderId':
+        field_value = field_data.get('order id') or field_data.get('注文番号')
+    if field_type == 'Sku':
+        field_value = field_data.get('sku') or field_data.get('SKU')
+    if field_type == 'Unit':
+        field_value = field_data.get('quantity') or field_data.get('数量')
+    if field_type == 'marketplace':
+        field_value = field_data.get('marketplace') or field_data.get('Amazon 出品サービス')
+    if field_type == 'Logistics':
+        field_value = field_data.get('fulfillment') or field_data.get('fulfilment') or field_data.get('フルフィルメント')
+    if field_type == 'AddrCity':
+        field_value = field_data.get('order city') or field_data.get('市町村')
+    if field_type == 'AddrState':
+        field_value = field_data.get('order state') or field_data.get('都道府県')
+    if field_type == 'AddrPostal':
+        field_value = field_data.get('order postal') or field_data.get('郵便番号')
+    if field_type == 'TaxModel':
+        field_value = field_data.get('tax collection model')
+    if field_type == 'Revnue':
+        field_value = field_data.get('product sales') or field_data.get('商品売上')
+    if field_type == 'TaxRevnue':
+        field_value = field_data.get('product sales tax') or 0
+    if field_type == 'RevShipping':
+        field_value = field_data.get('shipping credits') or field_data.get('postage credits') or field_data.get('配送料')
+    if field_type == 'TaxShipping':
+        field_value = field_data.get('shipping credits tax') or 0
+    if field_type == 'RevGiftwrap':
+        field_value = field_data.get('gift wrap credits') or field_data.get('ギフト包装手数料')
+    if field_type == 'TaxGiftwrap':
+        field_value = field_data.get('giftwrap credits tax') or 0
+    if field_type == 'RevPoint':
+        field_value = field_data.get('Amazonポイントの費用') or 0
+    if field_type == 'FeePromotionalRebates':
+        field_value = field_data.get('promotional rebates') or field_data.get('プロモーション割引額')
+    if field_type == 'TaxPromotionalRebates':
+        field_value = field_data.get('promotional rebates tax') or 0
+    if field_type == 'TaxMarketplaceWithheld':
+        field_value = field_data.get('marketplace withheld tax') or 0
+    if field_type == 'FeeSelling':
+        field_value = field_data.get('selling fees') or field_data.get('手数料')
+    if field_type == 'FeeFba':
+        field_value = field_data.get('fba fees') or field_data.get('FBA 手数料')
+    if field_type == 'FeeOtherTransaction':
+        field_value = field_data.get('other transaction fees') or field_data.get('トランザクションに関するその他の手数料')
+    if field_type == 'FeeOther':
+        field_value = field_data.get('other') or field_data.get('その他')
+    if field_type == 'RevTotal':
+        field_value = field_data.get('total') or field_data.get('合計')
+    if field_type == 'Description':
+        field_value = field_data.get('description') or field_data.get('説明')
+    return field_value
 
 def fee_format(fee):
     if fee and str(fee).find(','):
