@@ -53,8 +53,7 @@ class FileToSql:
         if tb_name == 'AscPayments':
             st_session = settlements.DBSession()
             for data in json_data:
-                d_type = data.get('type').strip() if data.get('type') else data.get('type')
-                log.info('*|{}|*'.format(d_type))
+                d_type = data.get('type') or data.get('トランザクションの種類')
                 if d_type in ['Order', 'Refund', '注文', '返金']:
                     data_to_sql = settlements.AscPaymentsOrder(country, self.currency, self.invoice, data)
                 elif d_type in ['Transfer', 'マイナス残高']:
