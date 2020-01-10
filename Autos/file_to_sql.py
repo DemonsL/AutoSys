@@ -54,7 +54,7 @@ class FileToSql:
             st_session = settlements.DBSession()
             for data in json_data:
                 d_type = data.get('type')
-                if d_type in ['Order', 'Refund', '注文', '返金']:
+                if d_type in ['Order', 'Refund', '\u6ce8\u6587', '返金']:
                     data_to_sql = settlements.AscPaymentsOrder(country, self.currency, self.invoice, data)
                 elif d_type in ['Transfer', 'マイナス残高']:
                     data_to_sql = settlements.AscPaymentsAccount(country, self.currency, self.invoice, data)
