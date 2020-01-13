@@ -51,6 +51,8 @@ class AmzTopSpider(scrapy.Spider):
             return p_star.split(' out')[0]
         if country == 'DE':
             return p_star.split(' von')[0].replace(',', '.')
+        if country == 'JP':
+            return p_star.split(' ')[1]
 
     def parse_price(self, country, p_price):
         try:
@@ -60,6 +62,8 @@ class AmzTopSpider(scrapy.Spider):
                 return p_price.text.strip('£').split(' -')[0].replace(',', '')
             if country == 'DE':
                 return p_price.text.strip('\u00a0€').strip('EUR ').split(' -')[0].replace(',', '.')
+            if country == 'JP':
+                return p_price.text.strip('￥').split(' -')[0].replace(',', '')
         except:
             return 0.0
 
