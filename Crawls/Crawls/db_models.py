@@ -20,8 +20,8 @@ class ApbBestSeller(Base):
     CategoryID = Column(String(50), primary_key=True)
     Rank = Column(Integer, primary_key=True)
     Asin = Column(String(20))
-    Title = Column(String(400))
-    Keywords = Column(String(400))
+    Title = Column(String(600))
+    Keywords = Column(String(600))
     Pic = Column(String(50))
     Review = Column(Integer)
     Star = Column(DECIMAL(4, 1))
@@ -33,8 +33,8 @@ class ApbBestSeller(Base):
         self.CategoryID = best_seller.get('CategoryID')
         self.Rank = best_seller.get('Rank')
         self.Asin = best_seller.get('Asin')
-        self.Title = best_seller.get('Title')
-        self.Keywords = best_seller.get('Keywords')
+        self.Title = best_seller.get('Title')[:600]
+        self.Keywords = best_seller.get('Keywords')[:600]
         self.Pic = best_seller.get('Pic')
         self.Review = best_seller.get('Review')
         self.Star = best_seller.get('Star')
