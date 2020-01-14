@@ -170,37 +170,37 @@ def all_country_value(field_data, field_type):
     if field_type == 'AddrPostal':
         field_value = field_data.get('order postal') or field_data.get('郵便番号')
     if field_type == 'TaxModel':
-        field_value = field_data.get('tax collection model')
+        field_value = field_data.get('tax collection model') or ''
     if field_type == 'Revnue':
-        field_value = field_data.get('product sales') or field_data.get('商品売上')
+        field_value = field_data.get('product sales') or field_data.get('商品売上') or 0
     if field_type == 'TaxRevnue':
         field_value = field_data.get('product sales tax') or 0
     if field_type == 'RevShipping':
-        field_value = field_data.get('shipping credits') or field_data.get('postage credits') or field_data.get('配送料')
+        field_value = field_data.get('shipping credits') or field_data.get('postage credits') or field_data.get('配送料') or 0
     if field_type == 'TaxShipping':
         field_value = field_data.get('shipping credits tax') or 0
     if field_type == 'RevGiftwrap':
-        field_value = field_data.get('gift wrap credits') or field_data.get('ギフト包装手数料')
+        field_value = field_data.get('gift wrap credits') or field_data.get('ギフト包装手数料') or 0
     if field_type == 'TaxGiftwrap':
         field_value = field_data.get('giftwrap credits tax') or 0
     if field_type == 'RevPoint':
         field_value = field_data.get('Amazonポイントの費用') or 0
     if field_type == 'FeePromotionalRebates':
-        field_value = field_data.get('promotional rebates') or field_data.get('プロモーション割引額')
+        field_value = field_data.get('promotional rebates') or field_data.get('プロモーション割引額') or 0
     if field_type == 'TaxPromotionalRebates':
         field_value = field_data.get('promotional rebates tax') or 0
     if field_type == 'TaxMarketplaceWithheld':
         field_value = field_data.get('marketplace withheld tax') or 0
     if field_type == 'FeeSelling':
-        field_value = field_data.get('selling fees') or field_data.get('手数料')
+        field_value = field_data.get('selling fees') or field_data.get('手数料') or 0
     if field_type == 'FeeFba':
-        field_value = field_data.get('fba fees') or field_data.get('FBA 手数料')
+        field_value = field_data.get('fba fees') or field_data.get('FBA 手数料') or 0
     if field_type == 'FeeOtherTransaction':
-        field_value = field_data.get('other transaction fees') or field_data.get('トランザクションに関するその他の手数料')
+        field_value = field_data.get('other transaction fees') or field_data.get('トランザクションに関するその他の手数料') or 0
     if field_type == 'FeeOther':
-        field_value = field_data.get('other') or field_data.get('その他')
+        field_value = field_data.get('other') or field_data.get('その他') or 0
     if field_type == 'RevTotal':
-        field_value = field_data.get('total') or field_data.get('合計')
+        field_value = field_data.get('total') or field_data.get('合計') or 0
     if field_type == 'Description':
         field_value = field_data.get('description') or field_data.get('説明')
     return field_value
