@@ -56,7 +56,7 @@ class FileToSql:
                 d_type = data.get('type') or data.get('トランザクションの種類')
                 if d_type in ['Order', 'Refund', '注文', '返金']:
                     data_to_sql = settlements.AscPaymentsOrder(country, self.currency, self.invoice, data)
-                elif d_type in ['Transfer', 'マイナス残高']:
+                elif d_type in ['Transfer', '振込み']:
                     data_to_sql = settlements.AscPaymentsAccount(country, self.currency, self.invoice, data)
                 else:
                     data_to_sql = settlements.AscPaymentsFee(country, self.currency, self.invoice, data)
