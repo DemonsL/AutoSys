@@ -122,6 +122,7 @@ CharSet = 'utf8'
 # Amz_Best_Seller
 ABS_SITE = {
    'US': 'https://www.amazon.com/bestsellers/',
+   'CA': 'https://www.amazon.ca/bestsellers/',
    'UK': 'https://www.amazon.co.uk/bestsellers/',
    'DE': 'https://www.amazon.de/bestsellers/',
    'JP': 'https://www.amazon.co.jp/bestsellers/'

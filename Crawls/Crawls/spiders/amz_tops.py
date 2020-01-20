@@ -47,7 +47,7 @@ class AmzTopSpider(scrapy.Spider):
                 logger.info('ParseError: %s' % e)
 
     def parse_star(self, country, p_star):
-        if country in ['US', 'UK']:
+        if country in ['US', 'CA', 'UK']:
             return p_star.split(' out')[0]
         if country == 'DE':
             return p_star.split(' von')[0].replace(',', '.')
@@ -58,6 +58,8 @@ class AmzTopSpider(scrapy.Spider):
         try:
             if country == 'US':
                 return p_price.text.strip('$').split(' -')[0].replace(',', '')
+            if country == 'CA':
+                return p_price.text.strip('CDN$').split(' -')[0].replace(',', '').strip()
             if country == 'UK':
                 return p_price.text.strip('£').split(' -')[0].replace(',', '')
             if country == 'DE':
