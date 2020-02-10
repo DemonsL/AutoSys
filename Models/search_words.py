@@ -48,7 +48,7 @@ class SearchWords:
     def convert_to_float(self, value):
         if isinstance(value, str):
             return 0.0
-        if not isinstance(value, float):
+        if value and (not isinstance(value, float)):
             return float(value)
         else:
             return value
