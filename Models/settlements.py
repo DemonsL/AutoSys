@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 DBConnection = 'mysql+pymysql://%s:%s@%s:%s/%s?charset=%s' % \
-               (db.User, db.Passwd, db.Host, db.Port, db.DB, db.CharSet)
+               (db.User, db.Passwd, db.Host, db.Port, 'Xcentz-New', db.CharSet)
 engine = create_engine(DBConnection)
 DBSession = sessionmaker(bind=engine)
 
