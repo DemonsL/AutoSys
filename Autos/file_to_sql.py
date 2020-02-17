@@ -130,10 +130,10 @@ def start_add_files(f_name, s_path, d_path, tb_name):
         if ets.get_bussiness(f_date):
             ets.delete_bussiness(f_date)
         resp_data, resp_time = ets.data_to_json(tb_name, f_path)
-        print(f_date)
-        print(f_country)
-        print(resp_time)
-        print(resp_data)
+        log.info(f_date)
+        log.info(f_country)
+        log.info(resp_time)
+        log.info(resp_data)
         ets.add_to_sql(tb_name, resp_data, snap_date=f_date, country=f_country)
         shutil.move(f_path, d_path)
     if tb_name in ['AscSearchWeek', 'AscSearchMonth']:
