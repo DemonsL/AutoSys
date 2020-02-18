@@ -43,7 +43,7 @@ class AscAsinBussiness(Base):
         self.BuyBoxPercentage = self.percentage_to_float(json_data.get('Buy Box Percentage'))
         self.Units = self.format_int(json_data.get('Units Ordered'))
         self.UnitSessionPercentage = self.percentage_to_float(json_data.get('Unit Session Percentage'))
-        self.Revenue = float(json_data.get('Ordered Product Sales').strip('$').replace(',', ''))
+        self.Revenue = float(json_data.get('Ordered Product Sales').strip('$').strip('Can$').replace(',', ''))
         self.Orders = self.format_int(json_data.get('Total Order Items'))
 
     def percentage_to_float(self, per_value):
