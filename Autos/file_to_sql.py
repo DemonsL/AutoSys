@@ -148,7 +148,7 @@ def start_add_files(f_name, s_path, d_path, tb_name):
     if tb_name == 'AscPayments':
         f_date = f_name.split('.')[0].split('_')[0]
         f_country = f_name.split('.')[0].split('_')[1]
-        ets.invoice = 'Invoiced' if (f_name.split('.')[0].split('_')[-1] == 'Inv') else 'Standard'
+        ets.invoice = 'Invoiced' if (f_name.split('.')[0].split('_')[-1].strip() == 'Inv') else 'Standard'
         # 数据有更新时删除旧数据
         log.info('Delete old data...')
         ets.delete_payments(f_date, f_country, ets.invoice)
