@@ -156,8 +156,7 @@ def all_country_value(field_data, field_type):
         field_value = field_data.get('settlement id') or field_data.get('Abrechnungsnummer') \
                                                       or field_data.get('決済番号')
     if field_type == 'Type':
-        field_value = field_data.get('type') or field_data.get('Typ') \
-                                             or (field_data.get('Typ').replace('Bestellung', 'Order').replace('Erstattung', 'Refund') if field_data.get('Typ') else field_data.get('Typ')) \
+        field_value = field_data.get('type') or (field_data.get('Typ').replace('Bestellung', 'Order').replace('Erstattung', 'Refund') if field_data.get('Typ') else field_data.get('Typ')) \
                                              or (field_data.get('トランザクションの種類').replace('注文', 'Order').replace('返金', 'Refund') if field_data.get('トランザクションの種類') else field_data.get('トランザクションの種類'))
     if field_type == 'AmazonOrderId':
         field_value = field_data.get('order id') or field_data.get('Bestellnummer') \
