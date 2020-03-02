@@ -62,21 +62,21 @@ class AscPaymentsOrder(Base):
         self.AddrState = all_country_value(order_detail, 'AddrState')
         self.AddrPostal = all_country_value(order_detail, 'AddrPostal')
         self.TaxModel = all_country_value(order_detail, 'TaxModel')
-        self.Revnue = fee_format(all_country_value(order_detail, 'Revnue'))
-        self.TaxRevnue = fee_format(all_country_value(order_detail, 'TaxRevnue'))
-        self.RevShipping = fee_format(all_country_value(order_detail, 'RevShipping'))
-        self.TaxShipping = fee_format(all_country_value(order_detail, 'TaxShipping'))
-        self.RevGiftwrap = fee_format(all_country_value(order_detail, 'RevGiftwrap'))
-        self.TaxGiftwrap = fee_format(all_country_value(order_detail, 'TaxGiftwrap'))
-        self.RevPoint = fee_format(all_country_value(order_detail, 'RevPoint'))
-        self.FeePromotionalRebates = fee_format(all_country_value(order_detail, 'FeePromotionalRebates'))
-        self.TaxPromotionalRebates = fee_format(all_country_value(order_detail, 'TaxPromotionalRebates'))
-        self.TaxMarketplaceWithheld = fee_format(all_country_value(order_detail, 'TaxMarketplaceWithheld'))
-        self.FeeSelling = fee_format(all_country_value(order_detail, 'FeeSelling'))
-        self.FeeFba = fee_format(all_country_value(order_detail, 'FeeFba'))
-        self.FeeOtherTransaction = fee_format(all_country_value(order_detail, 'FeeOtherTransaction'))
-        self.FeeOther = fee_format(all_country_value(order_detail, 'FeeOther'))
-        self.RevTotal = fee_format(all_country_value(order_detail, 'RevTotal'))
+        self.Revnue = fee_format(country, all_country_value(order_detail, 'Revnue'))
+        self.TaxRevnue = fee_format(country, all_country_value(order_detail, 'TaxRevnue'))
+        self.RevShipping = fee_format(country, all_country_value(order_detail, 'RevShipping'))
+        self.TaxShipping = fee_format(country, all_country_value(order_detail, 'TaxShipping'))
+        self.RevGiftwrap = fee_format(country, all_country_value(order_detail, 'RevGiftwrap'))
+        self.TaxGiftwrap = fee_format(country, all_country_value(order_detail, 'TaxGiftwrap'))
+        self.RevPoint = fee_format(country, all_country_value(order_detail, 'RevPoint'))
+        self.FeePromotionalRebates = fee_format(country, all_country_value(order_detail, 'FeePromotionalRebates'))
+        self.TaxPromotionalRebates = fee_format(country, all_country_value(order_detail, 'TaxPromotionalRebates'))
+        self.TaxMarketplaceWithheld = fee_format(country, all_country_value(order_detail, 'TaxMarketplaceWithheld'))
+        self.FeeSelling = fee_format(country, all_country_value(order_detail, 'FeeSelling'))
+        self.FeeFba = fee_format(country, all_country_value(order_detail, 'FeeFba'))
+        self.FeeOtherTransaction = fee_format(country, all_country_value(order_detail, 'FeeOtherTransaction'))
+        self.FeeOther = fee_format(country, all_country_value(order_detail, 'FeeOther'))
+        self.RevTotal = fee_format(country, all_country_value(order_detail, 'RevTotal'))
         self.Currency = currency
 
 
@@ -100,7 +100,7 @@ class AscPaymentsAccount(Base):
         self.SettlementId = all_country_value(account_detail, 'SettlementId')
         self.Type = all_country_value(account_detail, 'Type')
         self.Description = all_country_value(account_detail, 'Description')
-        self.Amount = fee_format(all_country_value(account_detail, 'RevTotal'))
+        self.Amount = fee_format(country, all_country_value(account_detail, 'RevTotal'))
         self.Currency = currency
 
 
@@ -125,7 +125,7 @@ class AscPaymentsFee(Base):
         self.SettlementId = all_country_value(fee_detail, 'SettlementId')
         self.Type = all_country_value(fee_detail, 'Type')
         self.FeeDescription = all_country_value(fee_detail, 'Description')
-        self.FeeAmount = fee_format(all_country_value(fee_detail, 'RevTotal'))
+        self.FeeAmount = fee_format(country, all_country_value(fee_detail, 'RevTotal'))
         self.Currency = currency
 
 
