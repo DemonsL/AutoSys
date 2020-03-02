@@ -53,10 +53,10 @@ class FileToSql:
         if tb_name == 'AscPayments':
             st_session = settlements.DBSession()
             for data in json_data:
-                d_type = data.get('type') or data.get('トランザクションの種類')
-                if d_type in ['Order', 'Refund', '注文', '返金']:
+                d_type = data.get('type') or data.get('Typ') or data.get('トランザクションの種類')
+                if d_type in ['Order', 'Refund', '注文', '返金', 'Bestellung', 'Erstattung']:
                     data_to_sql = settlements.AscPaymentsOrder(country, self.currency, self.invoice, data)
-                elif d_type in ['Transfer', '振込み']:
+                elif d_type in ['Transfer', '振込み', 'Übertrag']:
                     data_to_sql = settlements.AscPaymentsAccount(country, self.currency, self.invoice, data)
                 else:
                     data_to_sql = settlements.AscPaymentsFee(country, self.currency, self.invoice, data)
@@ -110,6 +110,8 @@ class FileToSql:
                     self.currency = pd.read_csv(file_name, nrows=1, encoding='utf-8').values[0][0].split(',')[0].split(' ')[-1]
                 elif country == 'JP':
                     self.currency = 'JPY'
+                elif country == 'DE':
+                    self.currency = 'EUR'
                 data = pd.read_csv(file_name, header=h_num, encoding='utf-8')
             else:
                 data = pd.read_csv(file_name, encoding='utf-8')

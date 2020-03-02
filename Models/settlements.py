@@ -141,6 +141,9 @@ def date_format(src_date, ct):
     if ct == 'UK':
         src_date = src_date.get('date/time').strip('GMT+00:00').strip()
         format_str = '%d %b %Y %H:%M:%S'
+    if ct == 'DE':
+        src_date = src_date.get('Datum/Uhrzeit').strip('GMT+00:00').strip()
+        format_str = '%d.%m.%Y %H:%M:%S'
     if ct == 'JP':
         src_date = src_date.get('日付/時間').strip('JST')
         format_str = '%Y/%m/%d %H:%M:%S'
@@ -150,63 +153,87 @@ def date_format(src_date, ct):
 def all_country_value(field_data, field_type):
     field_value = ''
     if field_type == 'SettlementId':
-        field_value = field_data.get('settlement id') or field_data.get('決済番号')
+        field_value = field_data.get('settlement id') or field_data.get('Abrechnungsnummer') \
+                                                      or field_data.get('決済番号')
     if field_type == 'Type':
-        field_value = field_data.get('type') or (field_data.get('トランザクションの種類').replace('注文', 'Order').replace('返金', 'Refund') if field_data.get('トランザクションの種類') else field_data.get('トランザクションの種類'))
+        field_value = field_data.get('type') or field_data.get('Typ') \
+                                             or (field_data.get('Typ').replace('Bestellung', 'Order').replace('Erstattung', 'Refund') if field_data.get('Typ') else field_data.get('Typ')) \
+                                             or (field_data.get('トランザクションの種類').replace('注文', 'Order').replace('返金', 'Refund') if field_data.get('トランザクションの種類') else field_data.get('トランザクションの種類'))
     if field_type == 'AmazonOrderId':
-        field_value = field_data.get('order id') or field_data.get('注文番号')
+        field_value = field_data.get('order id') or field_data.get('Bestellnummer') \
+                                                 or field_data.get('注文番号')
     if field_type == 'Sku':
         field_value = field_data.get('sku') or field_data.get('SKU')
     if field_type == 'Unit':
-        field_value = field_data.get('quantity') or field_data.get('数量')
+        field_value = field_data.get('quantity') or field_data.get('Menge') \
+                                                 or field_data.get('数量')
     if field_type == 'marketplace':
-        field_value = field_data.get('marketplace') or field_data.get('Amazon 出品サービス')
+        field_value = field_data.get('marketplace') or field_data.get('Marketplace') \
+                                                    or field_data.get('Amazon 出品サービス')
     if field_type == 'Logistics':
-        field_value = field_data.get('fulfillment') or field_data.get('fulfilment') or field_data.get('フルフィルメント')
+        field_value = field_data.get('fulfillment') or field_data.get('fulfilment') \
+                                                    or field_data.get('Versand') \
+                                                    or field_data.get('フルフィルメント')
     if field_type == 'AddrCity':
-        field_value = field_data.get('order city') or field_data.get('市町村')
+        field_value = field_data.get('order city') or field_data.get('Ort der Bestellung') \
+                                                   or field_data.get('市町村')
     if field_type == 'AddrState':
-        field_value = field_data.get('order state') or field_data.get('都道府県')
+        field_value = field_data.get('order state') or field_data.get('Bundesland') \
+                                                    or field_data.get('都道府県')
     if field_type == 'AddrPostal':
-        field_value = field_data.get('order postal') or field_data.get('郵便番号')
+        field_value = field_data.get('order postal') or field_data.get('Postleitzahl') \
+                                                     or field_data.get('郵便番号')
     if field_type == 'TaxModel':
         field_value = field_data.get('tax collection model') or ''
     if field_type == 'Revnue':
-        field_value = field_data.get('product sales') or field_data.get('商品売上') or 0
+        field_value = field_data.get('product sales') or field_data.get('Umsätze') \
+                                                      or field_data.get('商品売上') or 0
     if field_type == 'TaxRevnue':
         field_value = field_data.get('product sales tax') or 0
     if field_type == 'RevShipping':
-        field_value = field_data.get('shipping credits') or field_data.get('postage credits') or field_data.get('配送料') or 0
+        field_value = field_data.get('shipping credits') or field_data.get('postage credits') \
+                                                         or field_data.get('Gutschrift für Versandkosten') \
+                                                         or field_data.get('配送料') or 0
     if field_type == 'TaxShipping':
         field_value = field_data.get('shipping credits tax') or 0
     if field_type == 'RevGiftwrap':
-        field_value = field_data.get('gift wrap credits') or field_data.get('ギフト包装手数料') or 0
+        field_value = field_data.get('gift wrap credits') or field_data.get('Gutschrift für Geschenkverpackung') \
+                                                          or field_data.get('ギフト包装手数料') or 0
     if field_type == 'TaxGiftwrap':
         field_value = field_data.get('giftwrap credits tax') or 0
     if field_type == 'RevPoint':
         field_value = field_data.get('Amazonポイントの費用') or 0
     if field_type == 'FeePromotionalRebates':
-        field_value = field_data.get('promotional rebates') or field_data.get('プロモーション割引額') or 0
+        field_value = field_data.get('promotional rebates') or field_data.get('Rabatte aus Werbeaktionen') \
+                                                            or field_data.get('プロモーション割引額') or 0
     if field_type == 'TaxPromotionalRebates':
         field_value = field_data.get('promotional rebates tax') or 0
     if field_type == 'TaxMarketplaceWithheld':
         field_value = field_data.get('marketplace withheld tax') or 0
     if field_type == 'FeeSelling':
-        field_value = field_data.get('selling fees') or field_data.get('手数料') or 0
+        field_value = field_data.get('selling fees') or field_data.get('Verkaufsgebühren') \
+                                                     or field_data.get('手数料') or 0
     if field_type == 'FeeFba':
-        field_value = field_data.get('fba fees') or field_data.get('FBA 手数料') or 0
+        field_value = field_data.get('fba fees') or field_data.get('Gebühren zu Versand durch Amazon') \
+                                                 or field_data.get('FBA 手数料') or 0
     if field_type == 'FeeOtherTransaction':
-        field_value = field_data.get('other transaction fees') or field_data.get('トランザクションに関するその他の手数料') or 0
+        field_value = field_data.get('other transaction fees') or field_data.get('Andere Transaktionsgebühren') \
+                                                               or field_data.get('トランザクションに関するその他の手数料') or 0
     if field_type == 'FeeOther':
-        field_value = field_data.get('other') or field_data.get('その他') or 0
+        field_value = field_data.get('other') or field_data.get('Andere') \
+                                              or field_data.get('その他') or 0
     if field_type == 'RevTotal':
-        field_value = field_data.get('total') or field_data.get('合計') or 0
+        field_value = field_data.get('total') or field_data.get('Gesamt') \
+                                              or field_data.get('合計') or 0
     if field_type == 'Description':
-        field_value = field_data.get('description') or field_data.get('説明')
+        field_value = field_data.get('description') or field_data.get('Beschreibung') \
+                                                    or field_data.get('説明')
     return field_value
 
-def fee_format(fee):
+def fee_format(country, fee):
     if fee and str(fee).find(','):
+        if country == 'DE':
+            return float(str(fee).replace('.', '').replace(',', '.'))
         return float(str(fee).replace(',', ''))
     else:
         return fee
