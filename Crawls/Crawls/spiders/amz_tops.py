@@ -63,7 +63,7 @@ class AmzTopSpider(scrapy.Spider):
             if country == 'UK':
                 return p_price.text.strip('£').split(' -')[0].replace(',', '')
             if country == 'DE':
-                return p_price.text.strip('\u00a0€').strip('EUR ').split(' -')[0].replace(',', '.')
+                return p_price.text.strip('\u00a0€').strip('EUR ').split(' -')[0].strip('€').strip().replace(',', '.')
             if country == 'JP':
                 return p_price.text.strip('￥').split(' -')[0].replace(',', '')
         except:
