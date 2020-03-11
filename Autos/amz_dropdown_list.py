@@ -8,7 +8,7 @@ import requests
 import logging
 import datetime
 import fake_useragent
-from Utils import common
+from Utils.common import RedisClient
 from Models import dropdown_words
 from sqlalchemy import and_, distinct
 from Config.api_config import amz_dropdown_host, amz_dropdown_interface, amz_marketplace
@@ -45,7 +45,7 @@ class AmzDropdownList:
             'referer': amz_dropdown_host.get(ct)
         }
         proxies = {
-            'http': 'http://{}'.format(common.RedisClient().random())
+            'http': 'http://{}'.format(RedisClient().random())
         }
         words_resp = json.loads(requests.get(url, headers=headers, proxies=proxies).text)
         words_list = []
