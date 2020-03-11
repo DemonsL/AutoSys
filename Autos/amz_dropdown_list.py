@@ -15,7 +15,7 @@ from Config.api_config import amz_dropdown_host, amz_dropdown_interface, amz_mar
 
 
 formatter = logging.Formatter("%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s")
-file_name = '/home/develop/logs/amz_dropdown_words/{}.log'.format(datetime.date.today())
+file_name = '/home/develop/logs/amz_dropdown_list/{}.log'.format(datetime.date.today())
 log = logging.getLogger()
 log.setLevel(logging.INFO)
 
