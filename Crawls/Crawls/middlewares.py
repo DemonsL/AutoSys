@@ -5,7 +5,7 @@
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 from scrapy import signals
-from Utils.common import RedisClient
+from Common.common import RedisClient
 
 
 class CrawlsSpiderMiddleware(object):

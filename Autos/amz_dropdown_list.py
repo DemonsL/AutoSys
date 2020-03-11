@@ -8,7 +8,7 @@ import requests
 import logging
 import datetime
 import fake_useragent
-from Utils.common import RedisClient
+from Common.common import RedisClient
 from Models import dropdown_words
 from sqlalchemy import and_, distinct
 from Config.api_config import amz_dropdown_host, amz_dropdown_interface, amz_marketplace
