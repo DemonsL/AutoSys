@@ -63,7 +63,7 @@ class AmzDropdownList:
             g_words = self.group_words(search_key, word_list)
             if g_words:
                 log.info('Add to sql: %s' % g_words)
-                self.add_dropdown_words(ct, category, snap_date, g_words)
+                self.add_dropdown_words(ct, cate, snap_date, g_words)
 
             for word in word_list:
                 if (word.upper() == search_key.upper()) or not self.get_words_loop(ct, cate, s_date, word):
@@ -105,6 +105,27 @@ class AmzDropdownList:
         except Exception as e:
             log.error('Add dropdown words to sql error: %s' % e)
 
+    def get_search_words(self):
+        session = dropdown_words.DBSession()
+        try:
+            search_words = session.query(dropdown_words.ApbSpKeyword.Country,
+                                         dropdown_words.ApbSpKeyword.Category,
+                                         dropdown_words.ApbSpKeyword.Keyword) \
+                                  .order_by(dropdown_words.ApbSpKeyword.Country).all()
+            return search_words
+        except Exception as e:
+            log.error('Get search word error: %s' % e)
+
+    def add_words_to_sql(self, ct, cate, words):
+        session = dropdown_words.DBSession()
+        try:
+            for word in words:
+                word_db = dropdown_words.ApbSpKeyword(ct, cate, word)
+                session.add(word_db)
+            session.commit()
+        except Exception as e:
+            log.error('Add search words error: %s' % e)
+
 
 
 
@@ -112,27 +133,16 @@ class AmzDropdownList:
 
 if __name__ == '__main__':
 
-    cts = ['US', 'CA', 'UK', 'DE', 'JP']
-    search_word_dict = {
-        'US': ['Cable', ['iphone charger', 'iphone cable', 'ipad charger', 'ipad cable', 'lightning cable', 'lightning charger', 'apple charger', 'charger apple', 'iphone cord', '6ft iphone charger', 'braided lightning cable', 'iphone charging cable', 'iphone charging cord', 'apple charging cord', 'long iphone charger', 'iphone power cord', 'ipad charge cord', 'usb apple cable', 'apple iphone charger', 'ipad charging cable', 'apple charging cable', 'ipad charger cable', 'apple cable', 'lightning cord', 'apple cord']],
-        'CA': ['Cable', ['iphone charger', 'iphone cable', 'ipad charger', 'ipad cable', 'lightning cable', 'lightning charger', 'apple charger', 'charger apple', 'iphone cord', '6ft iphone charger', 'braided lightning cable', 'iphone charging cable', 'iphone charging cord', 'apple charging cord', 'long iphone charger', 'iphone power cord', 'ipad charge cord', 'usb apple cable', 'apple iphone charger', 'ipad charging cable', 'apple charging cable', 'ipad charger cable', 'apple cable', 'lightning cord', 'apple cord']],
-        'UK': ['Cable', ['iphone charger', 'iphone cable', 'ipad charger', 'ipad cable', 'lightning cable', 'lightning charger', 'apple charger', 'charger apple', 'iphone cord', '6ft iphone charger', 'braided lightning cable', 'iphone charging cable', 'iphone charging cord', 'apple charging cord', 'long iphone charger', 'iphone power cord', 'ipad charge cord', 'usb apple cable', 'apple iphone charger', 'ipad charging cable', 'apple charging cable', 'ipad charger cable', 'apple cable', 'lightning cord', 'apple cord']],
-        'DE': ['Kabel', ['iphone Kabel', 'iphone Ladekabel', 'iphone ladegerät', 'Lightning Ladekabel', 'Lightning Kabel', 'lightning ladegerät', 'apple ladekabel', 'apple ladegerät', 'apple kabel', 'iphone Kabel 3m', 'iphone Ladekabel 3m', 'iphone Kabel 1.8m', 'iphone Ladekabel 1.8m', 'mfi lightning kabel', 'iphone kabel lang', 'lightning kabel lang', 'iphone Ladekabel lang', 'Lightning Ladekabel lang', 'iphone cable', 'lightning cable', 'apple cable', 'apple lightning kabel', 'apple datenkabel', 'apple usb kabel', 'iphone datenkabel', 'ipad ladekabel', 'ipad ladekabel lang', 'ipad cable', 'ipad kabel']],
-        'JP': ['充電ケーブル', ['充電ケーブル', 'ライトニングケーブル', 'iphone 充電ケーブル', 'iphone ライトニングケーブル', 'usbケーブル', 'usbケーブル iphone', 'ライトニングUSBケーブル']]
-    }
     snap_date = datetime.datetime.now().date()
 
-    for ct in cts:
-        category = search_word_dict.get(ct)[0]
-        search_words = search_word_dict.get(ct)[1]
-
-        log.info('Amz dropdown words crawls starting... ')
-        log.info('Country: %s, Category: %s, Count_words: %s' % (ct, category, len(search_words)))
-        amz_dropdown = AmzDropdownList()
-        for search_word in search_words:
-            log.info('---------%s---------' % search_word)
-            try:
-                amz_dropdown.get_words_loop(ct, category, snap_date, search_word)
-            except Exception as e:
-                log.error('Error: %s' % e)
-        log.info('Amz dropdown words crawls end! ')
+    log.info('Amz dropdown words crawls starting... ')
+    amz_dropdown = AmzDropdownList()
+    search_word_list = amz_dropdown.get_search_words()
+    for search_word in search_word_list:
+        log.info('Country: %s, Category: %s, Count_words: %s' % (search_word[0], search_word[1], len(search_word_list)))
+        log.info('---------%s---------' % str(search_word))
+        try:
+            amz_dropdown.get_words_loop(search_word[0], search_word[1], snap_date, search_word[2])
+        except Exception as e:
+            log.error('Error: %s' % e)
+    log.info('Amz dropdown words crawls end! ')

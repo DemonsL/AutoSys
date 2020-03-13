@@ -29,3 +29,19 @@ class ApbSpKeywordsRelation(Base):
         self.CKeywordRank = params.get('CKeywordRank')
         self.CKeyword = params.get('CKeyword')
         self.SnapDate = snap_date
+
+
+
+class ApbSpKeyword(Base):
+
+    __tablename__ = 'Apb_Sp_Keyword'
+
+    ID = Column(Integer, primary_key=True)
+    Country = Column(String(50))
+    Category = Column(String(100))
+    Keyword = Column(String(255))
+
+    def __init__(self, country, category, word):
+        self.Country = country
+        self.Category = category
+        self.Keyword = word
