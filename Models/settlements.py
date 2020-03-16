@@ -133,7 +133,7 @@ class AscPaymentsFee(Base):
 def date_format(src_date, ct):
     format_str = ''
     if ct == 'US':    # 12小时制转24小时制
-        src_date = src_date.get('date/time').strip('PST').strip()
+        src_date = src_date.get('date/time').strip('PST').strip('PDT').strip()
         format_str = '%b %d, %Y %I:%M:%S %p'
     if ct == 'CA':    # 12小时制转24小时制
         src_date = src_date.get('date/time').strip('PST').strip('PDT').strip()
