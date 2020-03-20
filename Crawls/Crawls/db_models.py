@@ -43,7 +43,7 @@ class ApbBestSeller(Base):
 def update_best_seller(best_seller):
     return {
         'Asin' : best_seller.get('Asin'),
-        'Title' : best_seller.get('Title'),
+        'Title' : best_seller.get('Title') if isinstance(best_seller.get('Title'), str) else '',
         'Keywords' : best_seller.get('Keywords'),
         'Pic' : best_seller.get('Pic'),
         'Review' : best_seller.get('Review'),
