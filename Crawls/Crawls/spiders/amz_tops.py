@@ -55,17 +55,19 @@ class AmzTopSpider(scrapy.Spider):
             return p_star.split(' ')[1]
 
     def parse_price(self, country, p_price):
+        r_price = 0.0
         try:
             if country == 'US':
-                return p_price.text.strip('$').split(' -')[0].replace(',', '')
+                r_price = p_price.text.strip('$').split(' -')[0].replace(',', '')
             if country == 'CA':
-                return p_price.text.strip('CDN$').split(' -')[0].replace(',', '').strip()
+                r_price = p_price.text.strip('CDN$').split(' -')[0].replace(',', '').strip()
             if country == 'UK':
-                return p_price.text.strip('£').split(' -')[0].replace(',', '')
+                r_price = p_price.text.strip('£').split(' -')[0].replace(',', '')
             if country == 'DE':
-                return p_price.text.strip('\u00a0€').strip('EUR ').split(' -')[0].strip('€').strip().replace(',', '.')
+                r_price = p_price.text.strip('\u00a0€').strip('EUR ').split(' -')[0].strip('€').strip().replace(',', '.')
             if country == 'JP':
-                return p_price.text.strip('￥').split(' -')[0].replace(',', '')
+                r_price = p_price.text.strip('￥').split(' -')[0].replace(',', '')
+            return float(r_price)
         except:
             return 0.0
 
