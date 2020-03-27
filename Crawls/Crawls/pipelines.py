@@ -43,7 +43,7 @@ class CrawlsPipeline(object):
             while self.conn.llen(self.item_key):
                 data = json.loads(self.conn.lpop(self.item_key))
                 session.add(ApbBestSeller(self.snap_data, data))
-            session.commit()
+                session.commit()
         except Exception as e:
             logger.info('AddBestSellerError: %s' % e)
         finally:
