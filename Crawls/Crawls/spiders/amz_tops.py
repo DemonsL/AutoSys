@@ -41,7 +41,7 @@ class AmzTopSpider(scrapy.Spider):
                 item['Title'] = li.find('div', attrs={'aria-hidden': 'true'}).text.strip()
                 item['Star'] = self.parse_star(p_country, li.find('span', attrs={'class': 'a-icon-alt'}).text)
                 item['Review'] = li.find('a', attrs={'class': 'a-size-small a-link-normal'}).text.replace(',', '').replace('.', '')
-                item['Price'] = self.parse_price(p_country, li.find('span', attrs={'class': 'p13n-sc-price'})).split('\\')[0]
+                item['Price'] = self.parse_price(p_country, li.find('span', attrs={'class': 'p13n-sc-price'}))
                 yield item
             except Exception as e:
                 logger.info('ParseError: %s' % e)
